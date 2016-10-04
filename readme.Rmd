@@ -1,0 +1,97 @@
+---
+title: "Robust design-incorporating auxiliary information."
+author: Michael E. Colvin
+date: 30 September 2016
+output:
+  md_document:
+    variant: markdown_github
+  html_document:
+    theme: flatly
+    highlight: espresso
+    toc: FALSE
+---
+
+## Analysis preliminaries
+
+```{r,echo=FALSE}
+library(pander)
+#setwd(file.path(Sys.getenv("USERPROFILE"),"My Documents/projects/pallid sturgeon/analysis/skinny-fish"))
+source("./R/1_global.R")
+source("./R/2_functions.R")
+#source("./R/3_load.R")
+#source("./R/4_clean.R")
+dat<-readRDS("dat.RDS")
+source("./R/5_figures.R")
+source("./R/6_tables.R")
+lw<- subset(dat$Kn,segment_id%in%c(1:14))
+lw$jdaysq<- lw$jday*lw$jday
+fit<- lm(lwgh~llen+
+	jday +
+	jday:basin +
+	jdaysq +
+	jdaysq:basin +	
+	year_f + 
+	basin+
+	year_f:basin+
+	llen:year_f + 
+	basin:llen+	
+	basin:llen:year_f,
+	lw)
+
+```
+
+
+## LENTH-WEIGHT ANALYSIS OF COVARIANCE
+
+Analysis overview:
+
+Methods in a nutshell
+
+1. Fit length-weight data as a linear model by log transforming length and weight
+2. Estimate effect of year, basin
+3. NOTE-year is treated as a factor rather than continuous
+
+Results in a nutshell
+
+1.
+
+```{r,echo=FALSE}
+figures(1)
+```
+
+
+Figure 1. 
+
+```{r,echo=FALSE}
+figures(2)# plot of mean weight at length for RPMA 2 and 4
+```  
+
+Figure 2. Plot of weight (y-axis) and length (x-axis) on log scale for Pallid Sturgeon captured in the upper and lower
+Missouri River. Lines represent best fit linear models predicting weight from length.
+
+```{r,echo=FALSE}
+plot(kn~jday,lw)
+```  
+
+Figure 3. Plot of condition (y-axis) and day of year (x-axis) for Pallid Sturgeon captured in the upper and lower basins.
+
+   
+
+
+```{r,echo=FALSE}
+figures(3)# plot of Kn given mean weight at length for RPMA 2 and 4
+```  
+
+Figure 4. Plot of condition (y-axis) and mean weight (x-axis) for Pallid Sturgeon captured in the upper and lower
+Missouri River.   
+
+
+Table 1. Parameter estimates for linear model relating weight to length.
+Factors included in the the model are Julian day, Julian day squared, basin, and year.
+Varying interactions were used to all the length-weight relationship to vary by year and basin.
+
+```{r,echo=FALSE}
+panderOptions("digits", 3)
+pander(summary(fit))
+```
+
