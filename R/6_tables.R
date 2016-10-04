@@ -36,3 +36,33 @@ tables<-function(n)
 		}
 
 }
+
+
+
+aggregate(kn~year,lw[-which.min(lw$kn),],mean)
+aggregate(kn~year+basin,lw,median)
+aggregate(kn~year+basin,lw,max)
+plot(weight~length,lw,subset=year==2016,type='n')
+points(weight~length,lw,subset=basin=="LB"& year==2016,col="red")
+points(weight~length,lw,subset=basin=="UB"& year==2016,col="blue")
+
+plot(kn~length,lw,subset=year==2016,type='n')
+points(kn~length,lw,subset=basin=="LB"& year==2016,col="red")
+points(kn~length,lw,subset=basin=="UB"& year==2016,col="blue")
+
+plot(kn~length,lw,subset=year>=2015 & basin=="LB",type='n')
+points(kn~length,lw,subset=basin=="LB"& year==2015,col="red")
+points(kn~length,lw,subset=basin=="LB"& year==2016,col="blue")
+
+
+
+lw[which.min(lw$kn),]
+
+boxplot(kn~year,lw)
+sort(na.omit((lw$kn[which(lw$year==2016)])))
+
+
+
+
+
+

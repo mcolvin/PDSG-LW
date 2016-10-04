@@ -60,9 +60,11 @@ for a given length.
 ### Methods in a nutshell
 
 1. Fit length-weight data as a linear model by log transforming length and weight
-2. Estimate effect of year, basin and specific interactions
-3. An effect of day of year ($DOY$) and $DOY^2$ is included to account for within year differences in expected weight for a given length.  
-3. NOTE-year is treated as a factor rather than continuous
+1. Estimate effect of year, basin and specific interactions
+1. An effect of day of year ($DOY$) and $DOY^2$ is included to account for within year differences in expected weight for a given length.  
+1. NOTE-year is treated as a factor rather than continuous.
+1. Predicted weights and 95% confidence intervals were generated for 800 to 1400 mm fish by incriments of 200. Estiamtes were
+made for for each year and basin for $DOY$ = 92 (i.e., April 1)
 
 ### Preliminary results
 
@@ -84,9 +86,9 @@ than lower basin fish, in other years lower basin fish were slightly heavier for
 ### Discussion points
 
 1. The effect of DOY was fixed among years but allowed to vary by basin. Might make sense to allow to vary among year as well? 
-2. The effect of DOY is not quite what I want, it might make more sense to use it to model variability in the $b$ parameter in a
+1. The effect of DOY is not quite what I want, it might make more sense to use it to model variability in the $b$ parameter in a
 hierarchical fashion. 
-3. Any thoughts on what happened in the upper basin in 2011 and in early years  (2003, 2004)?  Those fish might have been skinny. Floods?   
+1. Any thoughts on what happened in the upper basin in 2011 and in early years  (2003, 2004)?  Those fish might have been skinny. Floods?   
 
 
 ### Figures
