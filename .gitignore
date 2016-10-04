@@ -8,6 +8,16 @@ Desktop.ini
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
+# IGNORE CERTAIN FILETYPES
+*.doc
+*.docx
+*.ppt
+*.pptx
+*.SESSION
+*.potx
+*.accdb
+*.xlsx
+
 # Windows Installer files
 *.cab
 *.msi
