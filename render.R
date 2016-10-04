@@ -3,7 +3,7 @@ library(rmarkdown)
 library(knitr)
 library(pander)
 
-setwd("C:/Users/mcolvin/Documents/projects/pallid sturgeon/analysis/skinny-fish")
+setwd("C:/Users/mcolvin/Documents/projects/pallid sturgeon/analysis/PDSG-LW")
 render("readme.Rmd","all",clean=FALSE)
 
 
