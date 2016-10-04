@@ -2,20 +2,17 @@ tables<-function(n)
 	{
 	if(n==1)
 		{
-		out<- dcast(hatchery2, segment_id~year+origin,value.var="llength",length)
+		out<- ddply(lw, .(basin,year_f),summarize,
+			length.mean=mean(length),
+			length.min=min(length),
+			length.max=max(length),
+			weight.mean=mean(weight),
+			weight.min=min(weight),
+			weight.max=max(weight)			
+			)
 		return(out)
 		}
-	if(n==2)
-		{
-		out<-dcast(hatchery2,hatchery~year,value.var="llength",length)
-		return(out)
-		}
-	if(n==3)
-		{
-		tmp<-dcast(hatchery2, hatchery~year2,value.var="f_id",fun=length)
-		return(tmp)		
-		
-		}
+	
 	if(n==4)
 		{
 		# MEAN WEIGHT AT LENGTH FOR UPPER AND LOWER BASIN FISH

@@ -23,8 +23,13 @@ figures<- function(n)
 			xlab="Log(Length)", ylab="Log(Weight)")
 		return(p)		
 		}		
-		
 	if(n==3)
+		{
+		# WEIGHT OVER JULIAN DAY
+		p<-xyplot(kn~jday|year_f,lw,group=basin,auto.key=TRUE,xlab="Day of year", ylab="Condition")
+		return(p)
+		}		
+	if(n==4)
 		{
 		pdat<- tables(4)
 		par(mfrow=c(4,1),mar=c(2,4,0,0),oma=c(1,1,1,1))
@@ -114,18 +119,7 @@ figures<- function(n)
 		panLab("1400 mm")
 		}
 	
-	if(n==4)
-		{
-		# WEIGHT OVER JULIAN DAY
-		pdat<- tables(4)
-		pdat<- pdat[order(dat$basin,pdat$length),]
-		plot(weight~jday,pdat,type='n',subset=length==800 & basin=="LB")
-		sapply(as.numeric(as.character(unique(pdat$year_f))),function(x)
-			{
-			points(weight~jday,pdat,subset=x & length==800 & basin=="LB",type='l');return()})
-		
-		
-		}
+
 
 	
 		
