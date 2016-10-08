@@ -1,4 +1,9 @@
+---
+title: "My Notebook"
+output: html_notebook
+---
 
+```{r }
 setwd("C:/Users/mcolvin/Google Drive/PDSG-Data/skinny-fish")
 
 source("./src/1_global.R")
@@ -10,3 +15,13 @@ source("./src/6_tables.R")
 
 
 source("./src/7_analysis.R")
+
+
+figures(1)
+figures(2)
+figures(3)
+figures(4)
+
+tables(1)
+```
+

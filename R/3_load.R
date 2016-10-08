@@ -1,6 +1,6 @@
 
 
-randall_removals<- read.csv("./dat/Copy of Randall selected odd L_W from Colvin condition data.csv")
+randall_removals<- read.csv("./dat/randall-deletes.csv")
 
 com99<- odbcConnectAccess2007("./dat/dat.accdb")
 eff<- sqlFetch(com99,"eff")

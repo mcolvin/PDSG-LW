@@ -2,25 +2,35 @@ tables<-function(n)
 	{
 	if(n==1)
 		{
-		out<- ddply(lw, .(basin,year_f),summarize,
+		out<- ddply(lw, .(basin,year),summarize,
 			length.mean=mean(length),
 			length.min=min(length),
 			length.max=max(length),
 			weight.mean=mean(weight),
 			weight.min=min(weight),
-			weight.max=max(weight)			
+			weight.max=max(weight)	,
+			kn_mean=mean(na.omit(kn)),
+			kn_std=sd(na.omit(kn))
 			)
 		return(out)
 		}
-	
+	if(n==2)
+		{# MODEL SELECTION TABLE		
+		modsel <- model.sel(fit01,fit02,fit03,fit04,fit05,fit06,fit07,
+			fit08,fit09,fit)
+		modsel<-as.data.frame(modsel)
+		out<- modsel[,c("df","logLik","AICc","delta","weight")]
+		out$model<- rownames(out)
+		out<- out[,c(6,1,2,3,4,5)]
+		rownames(out)<-c(1:nrow(out))
+		return(format(out,digits=2))
+		}
 	if(n==4)
 		{
 		# MEAN WEIGHT AT LENGTH FOR UPPER AND LOWER BASIN FISH
 		pdat<-expand.grid(length=c(600,800,1000,1200,1400,1600),
-			#jday=c(92,122,153,183,214,245,275), # APRIL 1 TO OCTOBER 1
-			jday=c(92:275), # APRIL 1 TO OCTOBER 1
-			year_f=unique(lw$year_f),basin=unique(lw$basin))
-		pdat$jdaysq<- pdat$jday^2
+			year_f=unique(lw$year_f),
+			basin=unique(lw$basin))
 		pdat$llen<- log(pdat$length)
 		pdat$lwgh<- predict(fit,pdat)
 		pdat$lwgh_se<-predict(fit,pdat,se.fit=TRUE,interval="confidence")$se.fit
@@ -36,32 +46,6 @@ tables<-function(n)
 		}
 
 }
-
-
-
-aggregate(kn~year,lw[-which.min(lw$kn),],mean)
-aggregate(kn~year+basin,lw,median)
-aggregate(kn~year+basin,lw,max)
-plot(weight~length,lw,subset=year==2016,type='n')
-points(weight~length,lw,subset=basin=="LB"& year==2016,col="red")
-points(weight~length,lw,subset=basin=="UB"& year==2016,col="blue")
-
-plot(kn~length,lw,subset=year==2016,type='n')
-points(kn~length,lw,subset=basin=="LB"& year==2016,col="red")
-points(kn~length,lw,subset=basin=="UB"& year==2016,col="blue")
-
-plot(kn~length,lw,subset=year>=2015 & basin=="LB",type='n')
-points(kn~length,lw,subset=basin=="LB"& year==2015,col="red")
-points(kn~length,lw,subset=basin=="LB"& year==2016,col="blue")
-
-
-
-lw[which.min(lw$kn),]
-
-boxplot(kn~year,lw)
-sort(na.omit((lw$kn[which(lw$year==2016)])))
-
-
 
 
 

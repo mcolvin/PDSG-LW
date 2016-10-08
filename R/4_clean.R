@@ -93,6 +93,7 @@ out$lwgh<- log(out$weight)
 out$segment_id<-as.factor(out$segment_id)
 out$year_f<-as.factor(out$year)
 out$jday<-as.numeric(format(out$setdate,"%j"))
+
 dat<- list(Kn=out)
 
 # FORMAT DATA FOR GROWTH
@@ -206,4 +207,4 @@ out$rpmaIndx<- ifelse(out$rpma==2,1,2)
 dat$growth<- out
 
 
-saveRDS(dat,"dat.RDS")
+saveRDS(dat,"./dat/dat.RDS")

@@ -1,0 +1,38 @@
+#'---
+#'title: "My Notebook"
+#'output: html_document
+#'---
+
+
+
+setwd("C:/Users/mcolvin/Documents/projects/pallid sturgeon/analysis/PDSG-LW")
+
+source("./R/1_global.R")
+source("./R/2_functions.R")
+source("./R/3_load.R")
+source("./R/4_clean.R")
+source("./R/5_figures.R")
+source("./R/6_tables.R")
+source("./R/7_analysis.R")
+
+lll<- subset(lw, kn>0.3)
+tmp<- ddply(lll,.(year,basin), summarize,
+	mean=mean(na.omit(kn)),
+	med=median(na.omit(kn)),
+	min=min(na.omit(kn)),
+	max=max(na.omit(kn)))
+plot(tmp$med)
+
+	
+hist(lll$kn[which(lll$basin=="UB"&lll$year==2016)])
+hist(lll$length[which(lll$basin=="UB"&lll$year==2016)])
+hist(lll$length[which(lll$basin=="UB"&lll$year==2015)])
+mean(lll$kn[which(lll$basin=="UB"&lll$year==2016)])
+
+
+figures(1)
+figures(2)
+figures(3)
+figures(4)
+
+tables(1)
