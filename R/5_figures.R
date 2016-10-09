@@ -193,9 +193,9 @@ figures<- function(n)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="")
 		panLab("1400 mm")
-		mtext(side=2, "Expected weight (kg)",outer=TRUE, line=-0.5)
+		mtext(side=2, "Predicted weight (kg)",outer=TRUE, line=-0.5)
 		mtext(side=1, "Year",outer=TRUE, line=-0.5)
-		legend("topright",c("Estimated weight","Condition"),pch=c(19,1))
+		legend("topright",c("Predicted weight","Condition"),pch=c(19,1))
 		}
 	if(n==6)
 		{
@@ -267,23 +267,23 @@ figures<- function(n)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="UB",yaxt='n',ylab="")
 		panLab("1400 mm")
-		mtext(side=2, "Expected weight (kg)",outer=TRUE, line=-0.5)
+		mtext(side=2, "Predicted weight (kg)",outer=TRUE, line=-0.5)
 		mtext(side=1, "Year",outer=TRUE, line=-0.5)
-		legend("bottomright",c("Estimated weight","Condition"),pch=c(19,1))
+		legend("bottomright",c("Predicted weight","Condition"),pch=c(19,1))
 		}
 	
 
 	if(n==7)
 		{
 		#' Why are 2016 upper basin fish heavier but kn is down?
-		x<-data.frame(len=c(400:1400))
+		x<-data.frame(len=c(200:1600))
 		x$llen<- log(x$len)
 		fit2<-lm(lwgh~llen,lw,subset=year==2016 & basin=="UB")
 		x$w<-exp(predict(fit2,x))
 		x$ws<-10^(-6.2561 + 3.2932*log10(x$len))
 		x$kn<-x$w/x$ws
-		plot(kn~len,x,ylim=c(0.85,1),type='l',lwd=4,las=1,ylab="Condition",
-			xlab="Length (mm)")
+		plot(kn~len,x,ylim=c(0.85,1.05),type='l',lwd=4,las=1,ylab="Condition",
+			xlab="Length (mm)",xlim=c(200,1600))
 		fit3<-lm(lwgh~llen, lw, subset=basin=="UB"&
 			year==2015)
 		x$w15<-exp(predict(fit3,x))
@@ -292,10 +292,52 @@ figures<- function(n)
 	
 		par(new=TRUE)
 		plot(density(lw[which(lw$year==2015 & lw$basin=="UB"),]$length),col="grey",lty=2,
-			yaxt='n',xaxt='n',ylab="",xlab="",main="")
+			yaxt='n',xaxt='n',ylab="",xlab="",main="",xlim=c(200,1600))
 		points(density(lw[which(lw$year==2016 & lw$basin=="UB"),]$length),col="black",lty=2,
 			type='l')
-		legend("bottomleft",legend=c(2015,2016),col=c("grey","black"),lwd=2,bg='white')
+		legend("top",legend=c(2015,2016),col=c("grey","black"),lwd=2,bg='white')
+
+		}
+	if(n==8)
+		{
+		#' Why are 2016 upper basin fish heavier but kn is down?
+		x<-expand.grid(length=c(200:1200),
+			basin=c("LB"),
+			year_f=as.factor(c(2003:2016)))
+		x<-rbind(x,expand.grid(length=c(200:1600),
+			basin=c("UB"),
+			year_f=as.factor(c(2003:2016)))	)
+		
+		x$llen<- log(x$length)
+		x$w<-exp(predict(fit,x))
+		x$ws<-10^(-6.2561 + 3.2932*log10(x$length))
+		x$kn<-x$w/x$ws
+		par(mfrow=c(2,1),mar=c(2,2,0,0),oma=c(2,2,1,1))
+		plot(kn~length,x,lwd=4,las=1,ylab="Condition",ylim=c(0.68,1.2),
+			xlab="Length (mm)",subset=basin=="LB",type='n')
+		xx<-levels(x$year_f)
+		cols<- grey(level=c(0:length(xx))/(length(xx)+1))
+		sapply(1:length(xx),function(i)
+			{
+			points(kn~length,x,lwd=3,subset=basin=="LB" & year_f==xx[i],type='l',
+				col=cols[i])
+			return(NULL)
+			})
+		legend("top",legend=c(2003:2016),col=cols,lwd=4,bg='white',ncol=4,cex=0.5)
+		panLab("Lower basin")		
+		plot(kn~length,x,lwd=4,las=1,ylab="Condition",ylim=c(0.6,1.3),
+			xlab="Length (mm)",subset=basin=="UB",type='n')
+		xx<-levels(x$year_f)
+		cols<- grey(level=c(0:length(xx))/(length(xx)+1))
+		sapply(1:length(xx),function(i)
+			{
+			points(kn~length,x,lwd=3,subset=basin=="UB" & year_f==xx[i],type='l',
+				col=cols[i])
+			return(NULL)
+			})		
+		mtext(side=1, "Length (mm)",outer=TRUE,line=0)
+		mtext(side=2, "Predicted condition",outer=TRUE,line=0.5)
+		panLab("Upper basin")
 		}
 
 	

@@ -1,5 +1,5 @@
 ---
-title: "Evaluating length-weight of pallid sturgeon."
+title: "Length weight analysis of covariance"
 author: Michael E. Colvin
 date: 4 October 2016
 output:
@@ -28,15 +28,13 @@ source("./R/7_analysis.R")
 
 
 ```
-## Analysis source
+### Analysis source
 
 Analysis source code can be viewed at [https://github.com/mcolvin/PDSG-LW](https://github.com/mcolvin/PDSG-LW).
 
 
 
-## Length weight analysis of covariance
-
-### Analysis overview:
+### Analysis overview
 
 This analysis fits length-weight data for pallid sturgeon captured in the upper (RPMA 2 and 3) and
 lower (RPMA 4) basins of the Missouri River.  The rationale for this analysis is that condition is 
@@ -44,7 +42,14 @@ an index of weight given an expected weight and therefore modelling expected wei
 of length using the base model $log(Weight) = log(a)+b\cdot log(Length)$ will illustrate changes in
 expected weight. This approach allows evaluating how expected weight is changing over time that
 complements analyses of condition. Specifically, if conditions is decreasing over time, it should index
-a decrease in expected fish weight for a given length. 
+a decrease in expected fish weight for a given length. This analysis variant was used to 
+answer the following questions:
+
+1. Does the length-weight relationship vary among years and between basins?
+1. Does mean kn correlate with predicted weights at varying sizes?
+1. If not why the discrepancy?
+
+
 
 ### Methods in a nutshell
 
@@ -54,6 +59,12 @@ a decrease in expected fish weight for a given length.
 1. Use AICc model averaging to evaluate evidence for differences among year and basins
 1. Used 'top' model to predict weights and 95% confidence intervals for 800 (i.e., reproductive fish)
 to 1400 mm pallid sturgeon by increments of 200. 
+1. For additional analyses the 'top' model was used to predict weights 200 to 1200 or 1600 mm
+pallid sturgeon by increments of 1 for lower and upper basins respectively.
+1. Predicted weights were used to calculate condition for varying length fish for each basin
+and year combination by dividing the predicted weight by the standard weight calculated as 
+$W_{standard}=10^(-6.2561)\cdot Length^{3.2932}$  
+
 
 
 
@@ -85,7 +96,7 @@ _Figure 2. Plot of weight (y-axis) and length (x-axis) on log scale for Pallid S
 basins (Upper; pink open circles, lower; blue open circles). 
 Lines represent best fit linear models predicting weight from length for data in each panel and group._
 
-### Patterns in condition
+### Question 2. Does mean kn correlate with predicted weights at varying sizes?
 
 Figure 3 below illustrates boxplots of condition among years and basins.
 Of interest to the skinny fish analysis are the years post 2011 that show a decline in condition.
@@ -93,36 +104,33 @@ Of interest to the skinny fish analysis are the years post 2011 that show a decl
 ```{r,echo=FALSE}
 figures(3)# boxplot of Kn given mean weight at length for RPMA 2 and 4
 ``` 
+
 _Figure 3. Plot of condition (y-axis) and day of year (x-axis) for Pallid Sturgeon captured in
 the upper and lower basins._
 
 
-### What are the predicted weights for a given length given fitted model
 Evaluating plots of predicted weight for a given length by year and basin in Figure 4 below we 
 generally see a similar view as Figure 3 above.
-
-
-
 
 
 ```{r,echo=FALSE}
 figures(4)# mean weight for lengths
 ```  
 
-_Figure 4. Plot of estimated weight (y-axis) and year (x-axis) for varying pallid sturgeon lengths (800, 1000, 1200, and 1400 mm).
+_Figure 4. Plot of estimated weight (y-axis) and year (x-axis) for varying pallid sturgeon lengths
+(800, 1000, 1200, and 1400 mm).
 Lower basin estimates were not included for fish 1400 mm because they were not observed.
-Vertical lines denote 95% confidence intervals. The dotted horizonatal line represents the standard
-weight used to calculate condition._ 
+Vertical lines denote 95% confidence intervals. The dotted horizontal line represents the standard
+weight used to calculate condition._
 
 
-### Does mean kn correlate with predicted weights at varying sizes?
 
 It should follow that condition (averaged by year and basin) and predicted weight for a 
-given length by year and basin should exhibit similar patterns.  Figure 3 above ploted condition
+given length by year and basin should exhibit similar patterns.  Figure 3 above plotted condition
 by year and basin, which is similar to previous analyses presented to MRRIC and the ISAP and 
 Figure 4 illustrated how the fitted model was used to estimate the weight for a given length
 pallid sturgeon. Superimposing the average condition factors on the data from Figure 4 above 
-for the lower and upper basin in Figures 5 and 6 below shows a bit of a discrepancy among some of
+for the lower and upper basin in Figures 5 and 6 below shows a discrepancy among some of
 the patterns of average condition and predicted weight at length.  
 
 
@@ -131,19 +139,53 @@ the patterns of average condition and predicted weight at length.
 figures(5)
 ``` 
 
-_Figure 5. _
+_Figure 5. Estimated weight for varying length lower basin pallid sturgeon among years.
+Open circles denote mean condition values among years for lower basin pallid sturgeon._
 
 ```{r,echo=FALSE}
 figures(6)
 ``` 
 
-_Figure 6. _
+_Figure 6. Estimated weight for varying length upper basin pallid sturgeon among years.
+Open circles denote mean condition values among years for upper basin pallid sturgeon._
+
+
+### Question 3. If not why the discrepancy?
+
+
+What is going on with the discrepancy of predicted weight and mean condition?
+The lower basin mean condition appears to track well with predicted weight across
+a range of lengths.
+But the last 5 years or so for the upper basin showed a different picture with predicted weight
+increasing but mean condition decreasing.
+Why is that?
+Looking at predicted weight for the range of lengths (200 to 1400 mm) for upper basin fish
+for 2015 and 2016 in Figure 7 below we see that condition varies with length and the pattern
+varies between the 2015 and 2016.
+Mean condition is that it is being driven by the bulk of the catch being smaller fish.
+Despite larger fish having a higher condition in 2016 the majority of those fish were below 800 mm.
+Contrasted with the 2015 fish where fish below 800 mm had a relatively high condition which
+in turn caused mean condition to be higher in 2015 relative to 2016.
+
 
 ```{r,echo=FALSE}
 figures(7)
 ``` 
 
 _Figure 7. Estimated condition values for upper basin pallid sturgeon of varying length
-in 2015 and 2016.  The dotted lines illustrate relative frequency of observations._
+in 2015 and 2016.  The dotted lines illustrate density of observations._
 
 
+
+The above condition can be problematic in terms of comparisons of condition because the length-weight
+relationships are not parallel for all the basin year combinations (i.e., b is equal for all combinations).
+Figure 8 below illustrates the predicted condition for each year and basin.  
+
+
+```{r,echo=FALSE}
+figures(8)
+``` 
+
+_Figure 8. Estimated condition values for lower and upper basin pallid sturgeon of varying length
+from 2003 to 2016.  Line coloration indicates year with 2003 being greay and 2016 being black. _
+ 

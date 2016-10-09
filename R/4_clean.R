@@ -96,6 +96,11 @@ out$jday<-as.numeric(format(out$setdate,"%j"))
 
 dat<- list(Kn=out)
 
+
+
+
+
+
 # FORMAT DATA FOR GROWTH
 growth<- merge(eff,fish,by.x="uniqueidentifier",by.y="uniqueid")
 growth<-merge(growth,stocked, by.x="tagnumber",by.y="pit_tag",all.x=TRUE)

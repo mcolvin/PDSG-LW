@@ -16,8 +16,16 @@ tables<-function(n)
 		}
 	if(n==2)
 		{# MODEL SELECTION TABLE		
-		modsel <- model.sel(fit01,fit02,fit03,fit04,fit05,fit06,fit07,
-			fit08,fit09,fit)
+		modsel <- model.sel("~length"=fit01,
+			"~len+basin"=fit02,
+			"~len+basin+llen:basin"=fit03,
+			"~llen+year"=fit04,
+			"~llen+year+llen:year"=fit05,
+			"~llen+year+basin"=fit06,
+			"~llen+llen+year+year:basin"=fit07,
+			"~year+llen+basin+llen:basin"=fit08,
+			"~llen+year+basin+llen:year"=fit09,
+			"~len+year+basin+llen:basin+llen:year+basin:year+len:basin:year"=fit)
 		modsel<-as.data.frame(modsel)
 		out<- modsel[,c("df","logLik","AICc","delta","weight")]
 		out$model<- rownames(out)
