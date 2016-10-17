@@ -109,7 +109,7 @@ figures<- function(n)
 		ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))
 		plot(weight~year,pdat,subset=length==len  , type='n',
 			ylim=ylims,ylab="",las=1)
-
+		
 		segdat<-subset(pdat, length==len &basin=="UB")
 		segdat$year<- segdat$year+0.05
 		points(weight~year,segdat, type='p',pch=17,cex=1,col='red')
@@ -127,7 +127,7 @@ figures<- function(n)
 		{
 		pdat<- tables(4)
 		kns<-tables(1)
-		par(mfrow=c(4,1),mar=c(2,4,0,0),oma=c(1,1,1,1))
+		par(mfrow=c(3,1),mar=c(2,4,0,0),oma=c(1,1,1,1))
 
 		pdat$weight<- pdat$weight/1000
 		pdat$lci<- pdat$lci/1000
@@ -180,19 +180,19 @@ figures<- function(n)
 		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="")
 				panLab("1200 mm")
 		# 1400 mm
-		len<- 1400
-		ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))
-		plot(weight~year,pdat,subset=length==len  , type='n',
-			ylim=ylims,ylab="",las=1)
-
-		segdat<-subset(pdat, length==len &basin=="LB")
-		segdat$year<- segdat$year+0.05
-		points(weight~year,segdat, type='p',pch=19,cex=1,col='black')
-		segments(x0=segdat$year,y0=segdat$lci,
-			x1=segdat$year,	y1=segdat$uci,col="black")		
-		par(new=TRUE)
-		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="")
-		panLab("1400 mm")
+		#len<- 1400
+		#ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))
+		#plot(weight~year,pdat,subset=length==len  , type='n',
+		#	ylim=ylims,ylab="",las=1)
+#
+		#segdat<-subset(pdat, length==len &basin=="LB")
+		#segdat$year<- segdat$year+0.05
+		#points(weight~year,segdat, type='p',pch=19,cex=1,col='black')
+		#segments(x0=segdat$year,y0=segdat$lci,
+		#	x1=segdat$year,	y1=segdat$uci,col="black")		
+		#par(new=TRUE)
+		#plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="")
+		#panLab("1400 mm")
 		mtext(side=2, "Predicted weight (kg)",outer=TRUE, line=-0.5)
 		mtext(side=1, "Year",outer=TRUE, line=-0.5)
 		legend("topright",c("Predicted weight","Condition"),pch=c(19,1))
