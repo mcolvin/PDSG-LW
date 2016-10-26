@@ -1,6 +1,5 @@
 figures<- function(n,form=NULL)
 	{
-    opar<-par()
 	if(n==1)
 		{
         par(mfrow=c(4,4),mar=c(0,0,1,1),oma=c(6,6,1,1))
@@ -64,11 +63,15 @@ figures<- function(n,form=NULL)
       	}		
 	if(n==3)
 		{
-		boxplot(kn~year,lw,xlab="Day of year", ylab="Condition",subset=basin=="LB",
-			at=sort(unique(lw$year))-0.15,boxwex=0.2)
-		boxplot(kn~year,lw,xlab="Day of year", ylab="Condition",subset=basin=="UB",add=TRUE,
-			xaxt='n',at=sort(unique(lw$year))+0.15,boxwex=0.2,col='grey')
-		legend("topleft",c("Lower basin","Upper basin"),fill=c("white","grey"))
+		boxplot(kn~year,lw,xlab="Year", ylab="Condition, unitless",subset=basin=="LB",
+			at=sort(unique(lw$year))-0.15,boxwex=0.2,xaxt='n',yaxt='ns',cex.lab=1.3)
+		boxplot(kn~year,lw,xlab="", ylab="",subset=basin=="UB",add=TRUE,
+			xaxt='n',at=sort(unique(lw$year))+0.15,boxwex=0.2,col='grey',yaxt='n')
+        axis(1, at=  sort(unique(lw$year)),tck=0.015) 
+        axis(3, at=  sort(unique(lw$year)),labels=FALSE,tck=0.015) 
+        axis(2, at=axTicks(2),tck=0.015,las=1)
+        axis(4, at=axTicks(2),labels=FALSE,tck=0.015)
+		legend("topleft",c("Lower basin","Upper basin"),fill=c("white","grey"),bty='n')
 		}
 		
 	if(n==4)
@@ -402,5 +405,5 @@ figures<- function(n,form=NULL)
 		panLab("A) Lower basin")			
 	
 		}
-    on.exit(par(opar))
+
 }
