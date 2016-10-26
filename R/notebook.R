@@ -29,9 +29,16 @@ hist(lll$length[which(lll$basin=="UB"&lll$year==2016)])
 hist(lll$length[which(lll$basin=="UB"&lll$year==2015)])
 mean(lll$kn[which(lll$basin=="UB"&lll$year==2016)])
 
-
-figures(1)
+dev.new(height=10,width=10)
+figures(1,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-01.pdf",
+    type="pdf")
+    
+    
 figures(2)
+
+
+
 figures(3)
 figures(4)
 

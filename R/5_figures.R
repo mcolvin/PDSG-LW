@@ -1,28 +1,67 @@
-figures<- function(n)
+figures<- function(n,form=NULL)
 	{
+    opar<-par()
 	if(n==1)
 		{
-		p<-xyplot(weight/1000~length|as.factor(year),dat$Kn,group=basin,auto.key=TRUE,
-			xlab="Length (mm)", ylab="Weight (kg)")
-		return(p)		
+        par(mfrow=c(4,4),mar=c(0,0,1,1),oma=c(6,6,1,1))
+        ord<- c(2015,2016,-99,-99,2011:2014,2007:2010,2003:2006)
+        xtcklab<- c(rep(FALSE,12),rep(TRUE,4))
+        ytcklab<- rep(FALSE,16)
+        ytcklab[c(1,5,9,13)]<-TRUE
+        for(i in 1:length(ord))
+            {
+            if(ord[i]>0){
+                
+                plot(weight/1000~length,dat$Kn,subset=year==ord[i],xaxt='n',type='n',
+                    xlab="",ylab="",yaxt='n',xlim=c(200,1600),ylim=c(0,23))
+                points(weight/1000~length,dat$Kn,subset=year==ord[i]& basin=="LB",col='grey',pch='.',cex=4)   
+                points(weight/1000~length,dat$Kn,subset=year==ord[i]& basin=="UB",col='black',pch='.',cex=4) 
+                axis(1,at=axTicks(1),labels=xtcklab[i], tck=0.02,line=0)
+                axis(3,at=axTicks(1),labels=FALSE, tck=0.02)
+                axis(2,at=axTicks(2),labels=ytcklab[i], tck=0.02,las=1,line=0)
+                axis(3,at=axTicks(2),labels=FALSE, tck=0.02) 
+                panLab(ord[i])
+
+                }else{plot.new()}
+            }  
+                   mtext(side=1,"Total length, cm",outer=TRUE,line=3,cex=1.3)
+                mtext(side=2,"Weight, kg",outer=TRUE,line=3,cex=1.3)     
+            legend("bottomright",c("Lower basin","Upper basin"), pch=15,col=c("black","grey"),bty='n')
 		}
 		
 	if(n==2)
-		{
-		p<-xyplot(lwgh~llen|as.factor(year),
-			groups=basin,     
-			data= dat$Kn,auto.key=TRUE,
-			#scales=list(y=list(log=T),x=list(log=T)),
-			panel = panel.superpose,
-			panel.groups = function(x, y,col,col.symbol,...) 
-				{
-				panel.xyplot(x, y,col=col.symbol,...)
-				panel.lmline(x,y,col=col.symbol)
-				}	,	
-			grid=TRUE,
-			xlab="Log(Length)", ylab="Log(Weight)")
-		return(p)		
-		}		
+		{ # plot of log length v log weight and best fit lines
+        
+          par(mfrow=c(4,4),mar=c(0,0,1,1),oma=c(6,6,1,1))
+        ord<- c(2015,2016,-99,-99,2011:2014,2007:2010,2003:2006)
+        xtcklab<- c(rep(FALSE,12),rep(TRUE,4))
+        ytcklab<- rep(FALSE,16)
+        ytcklab[c(1,5,9,13)]<-TRUE
+        for(i in 1:length(ord))
+            {
+            if(ord[i]>0){
+                
+                plot(lwgh~llen,dat$Kn,subset=year==ord[i],xaxt='n',type='n',
+                    xlab="",ylab="",yaxt='n',xlim=c(log(200),log(1600)),ylim=c(3,10))
+                points(lwgh~llen,dat$Kn,subset=year==ord[i]& basin=="LB",col='grey',pch='.',cex=4)   
+                points(lwgh~llen,dat$Kn,subset=year==ord[i]& basin=="UB",col='black',pch='.',cex=4) 
+                fitub<-lm(lwgh~llen,dat$Kn,subset=year==ord[i]& basin=="UB")
+                fitlb<-lm(lwgh~llen,dat$Kn,subset=year==ord[i]& basin=="LB")
+                abline(coef(fitlb)[1],coef(fitlb)[2],col="grey")
+                abline(coef(fitub)[1],coef(fitub)[2],col="black")
+                axis(1,at=axTicks(1),labels=xtcklab[i], tck=0.02,line=0)
+                axis(3,at=axTicks(1),labels=FALSE, tck=0.02)
+                axis(2,at=axTicks(2),labels=ytcklab[i], tck=0.02,las=1,line=0)
+                axis(3,at=axTicks(2),labels=FALSE, tck=0.02) 
+                panLab(ord[i])
+
+                }else{plot.new()}
+            }  
+            mtext(side=1,"Total length, cm",outer=TRUE,line=3,cex=1.3)
+            mtext(side=2,"Weight, kg",outer=TRUE,line=3,cex=1.3)     
+            legend("bottomright",c("Lower basin","Upper basin"), pch=15,col=c("black","grey"),bty='n',
+                lty=1)  
+      	}		
 	if(n==3)
 		{
 		boxplot(kn~year,lw,xlab="Day of year", ylab="Condition",subset=basin=="LB",
@@ -363,5 +402,5 @@ figures<- function(n)
 		panLab("A) Lower basin")			
 	
 		}
-		
+    on.exit(par(opar))
 }
