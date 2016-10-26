@@ -50,8 +50,10 @@ figures(4,form="USGS")
 savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-04.pdf",
     type="pdf")
 
-figures(4)
+
 figures(5)
+
+
 figures(6)
 figures(7)
 figures(8)
