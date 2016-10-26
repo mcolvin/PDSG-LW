@@ -35,11 +35,26 @@ savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/D
     type="pdf")
     
     
-figures(2)
+dev.new(height=10,width=10)
+figures(2,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-02.pdf",
+    type="pdf")
 
+dev.new(height=10,width=10)
+figures(3,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-03.pdf",
+    type="pdf")
+    
+dev.new(height=10,width=10)
+figures(4,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-04.pdf",
+    type="pdf")
 
-
-figures(3)
 figures(4)
+figures(5)
+figures(6)
+figures(7)
+figures(8)
+
 
 tables(1)
