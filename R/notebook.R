@@ -15,48 +15,56 @@ source("./R/5_figures.R")
 source("./R/6_tables.R")
 source("./R/7_analysis.R")
 
-lll<- subset(lw, kn>0.3)
-tmp<- ddply(lll,.(year,basin), summarize,
-	mean=mean(na.omit(kn)),
-	med=median(na.omit(kn)),
-	min=min(na.omit(kn)),
-	max=max(na.omit(kn)))
-plot(tmp$med)
-
-	
-hist(lll$kn[which(lll$basin=="UB"&lll$year==2016)])
-hist(lll$length[which(lll$basin=="UB"&lll$year==2016)])
-hist(lll$length[which(lll$basin=="UB"&lll$year==2015)])
-mean(lll$kn[which(lll$basin=="UB"&lll$year==2016)])
 
 dev.new(height=10,width=10)
 figures(1,form="USGS")
 savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-01.pdf",
     type="pdf")
-    
+ dev.off()   
     
 dev.new(height=10,width=10)
 figures(2,form="USGS")
 savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-02.pdf",
     type="pdf")
-
+ dev.off()  
 dev.new(height=10,width=10)
 figures(3,form="USGS")
 savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-03.pdf",
     type="pdf")
-    
+  dev.off()     
 dev.new(height=10,width=10)
 figures(4,form="USGS")
 savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-04.pdf",
     type="pdf")
+ dev.off()  
 
+dev.new(height=10,width=10)
+figures(5,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-05.pdf",
+    type="pdf")
+ dev.off()  
 
-figures(5)
+dev.new(height=10,width=10)
+figures(6,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-06.pdf",
+    type="pdf")
+ dev.off()  
+dev.new(height=10,width=10)
+figures(7,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-07.pdf",
+    type="pdf")
+ dev.off()  
+    dev.new(height=10,width=10)
+figures(8,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-08.pdf",
+    type="pdf")
+  dev.off()     
+    dev.new(height=10,width=10)
+figures(9,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-09.pdf",
+    type="pdf")
+ dev.off()  
 
-
-figures(6)
-figures(7)
-figures(8)
-
-
-tables(1)
+    
+    
+write.csv(tables(2),"C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/model-selection.csv")
