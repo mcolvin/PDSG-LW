@@ -51,9 +51,9 @@ tables<-function(n)
 		pdat$uci<- exp(pdat$lwgh+1.96*pdat$lwgh_se)
 		pdat$weight<- exp(pdat$lwgh)
 		pdat$year<-as.numeric(as.character(pdat$year_f))
-		pdat$kn<- pdat$weight/ 10^(-6.378 + 3.357*log10(pdat$length))
-		pdat$kn_lci<- pdat$lci/ 10^(-6.378 + 3.357*log10(pdat$length))
-		pdat$kn_uci<- pdat$uci/ 10^(-6.378 + 3.357*log10(pdat$length))
+		pdat$kn<- pdat$weight/ (10^(-5.9205 + 3.1574*log10(pdat$length)))# NEW RANDALL MOD
+		pdat$kn_lci<- pdat$lci/(10^(-5.9205 + 3.1574*log10(pdat$length)))# NEW RANDALL MOD
+		pdat$kn_uci<- pdat$uci/ (10^(-5.9205 + 3.1574*log10(pdat$length)))# NEW RANDALL MOD
 		pdat<- pdat[order(pdat$year,pdat$length),]
 		return(pdat)
 		}

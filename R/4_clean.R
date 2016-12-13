@@ -94,6 +94,10 @@ out$segment_id<-as.factor(out$segment_id)
 out$year_f<-as.factor(out$year)
 out$jday<-as.numeric(format(out$setdate,"%j"))
 
+# RECALCULATE KN USING RANDALL'S MODIFIED KN
+# WRITE OVER SHUMAN'S KN 
+out$kn<- out$weight/(10^(-5.9205 + 3.1574*log10(out$length)))
+
 dat<- list(Kn=out)
 
 

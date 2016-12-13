@@ -9,6 +9,10 @@
 # LINEAR
 # POWER
 # 
+
+panLab<-function(label,mag){legend("topleft",title=label, legend="", bty="n",cex=mag)}
+
+
 mod1_0<- function()
 	{# FABENS MODEL 
 	for(i in 1:N)

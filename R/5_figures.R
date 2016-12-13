@@ -2,8 +2,8 @@ figures<- function(n,form=NULL)
 	{
 	if(n==1)
 		{
-        par(mfrow=c(4,4),mar=c(0,0,1,1),oma=c(6,6,1,1))
-        ord<- c(2015,2016,-99,-99,2011:2014,2007:2010,2003:2006)
+        par(mfrow=c(4,4),mar=c(0,0,1,1),oma=c(6,6,1,1),cex.axis=1.5)
+        ord<- c(2015,2016,-99,-98,2011:2014,2007:2010,2003:2006)
         xtcklab<- c(rep(FALSE,12),rep(TRUE,4))
         ytcklab<- rep(FALSE,16)
         ytcklab[c(1,5,9,13)]<-TRUE
@@ -11,27 +11,33 @@ figures<- function(n,form=NULL)
             {
             if(ord[i]>0){
                 
-                plot(weight/1000~length,dat$Kn,subset=year==ord[i],xaxt='n',type='n',
-                    xlab="",ylab="",yaxt='n',xlim=c(200,1600),ylim=c(0,23))
-                points(weight/1000~length,dat$Kn,subset=year==ord[i]& basin=="LB",col='grey',pch='.',cex=4)   
-                points(weight/1000~length,dat$Kn,subset=year==ord[i]& basin=="UB",col='black',pch='.',cex=4) 
+                plot(weight/1000~I(length/10),dat$Kn,subset=year==ord[i],xaxt='n',type='n',
+                    xlab="",ylab="",yaxt='n',xlim=c(20,160),ylim=c(0,23))
+                points(weight/1000~I(length/10),dat$Kn,subset=year==ord[i]& basin=="LB",
+                    col='red',pch='.',cex=9)   
+                points(weight/1000~I(length/10),dat$Kn,subset=year==ord[i]& basin=="UB",
+                    col='black',pch='.',cex=9) 
                 axis(1,at=axTicks(1),labels=xtcklab[i], tck=0.02,line=0)
                 axis(3,at=axTicks(1),labels=FALSE, tck=0.02)
                 axis(2,at=axTicks(2),labels=ytcklab[i], tck=0.02,las=1,line=0)
                 axis(3,at=axTicks(2),labels=FALSE, tck=0.02) 
-                panLab(ord[i])
+                panLab(ord[i],mag=1.6)
 
-                }else{plot.new()}
+                }else{
+                    plot.new()
+                    if(ord[i]==-99){legend("bottomright",c("Lower basin","Upper basin"), 
+                        pch=15,col=c("red","black"),bty='n',cex=2)}
+                    }
             }  
-                   mtext(side=1,"Length, mm",outer=TRUE,line=3,cex=1.3)
-                mtext(side=2,"Weight, kg",outer=TRUE,line=3,cex=1.3)     
-            legend("bottomright",c("Lower basin","Upper basin"), pch=15,col=c("grey","black"),bty='n')
+            mtext(side=1,"Length, cm",outer=TRUE,line=3,cex=1.3)
+            mtext(side=2,"Weight, kg",outer=TRUE,line=3,cex=1.3)     
+            #legend("center",c("Lower basin","Upper basin"), pch=15,col=c("red","black"),bty='n')
 		}
 		
 	if(n==2)
 		{ # plot of log length v log weight and best fit lines
         
-          par(mfrow=c(4,4),mar=c(0,0,1,1),oma=c(6,6,1,1))
+        par(mfrow=c(4,4),mar=c(0,0,1,1),oma=c(6,6,1,1))
         ord<- c(2015,2016,-99,-99,2011:2014,2007:2010,2003:2006)
         xtcklab<- c(rep(FALSE,12),rep(TRUE,4))
         ytcklab<- rep(FALSE,16)
@@ -52,7 +58,7 @@ figures<- function(n,form=NULL)
                 axis(3,at=axTicks(1),labels=FALSE, tck=0.02)
                 axis(2,at=axTicks(2),labels=ytcklab[i], tck=0.02,las=1,line=0)
                 axis(3,at=axTicks(2),labels=FALSE, tck=0.02) 
-                panLab(ord[i])
+                panLab(ord[i],mag=1)
 
                 }else{plot.new()}
             }  
@@ -78,7 +84,7 @@ figures<- function(n,form=NULL)
 	if(n==4)
 		{
 		pdat<- tables(4)
-		par(mfrow=c(4,1),mar=c(2,4,0,0),oma=c(3,3,1,1))
+		par(mfrow=c(4,1),mar=c(2,4,0,0),oma=c(3,3,1,1),cex.axis=1.5)
 
 		pdat$weight<- pdat$weight/1000
 		pdat$lci<- pdat$lci/1000
@@ -96,17 +102,17 @@ figures<- function(n,form=NULL)
 		
 		segdat<-subset(pdat, length==len &basin=="LB")
 		segdat$year<- segdat$year-0.05
-		points(weight~year,segdat, type='p',pch=19,cex=1.5,col="grey")
-		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
-			x1=segdat$year,	y1=segdat$uci,col="grey")
+		points(weight~year,segdat, type='p',pch=19,cex=1.6,col="red")
+		segments(x0=segdat$year,y0=segdat$lci,lwd=3,
+			x1=segdat$year,	y1=segdat$uci,col="red")
 		
 		segdat<-subset(pdat, length==len &basin=="UB")
 		segdat$year<- segdat$year+0.05
-		points(weight~year,segdat, type='p',pch=17,cex=1.5,col='black')
-		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+		points(weight~year,segdat, type='p',pch=17,cex=1.6,col='black')
+		segments(x0=segdat$year,y0=segdat$lci,lwd=3,
 			x1=segdat$year,	y1=segdat$uci,col="black")		
-		panLab("800 mm")
-		abline(h=10^(-6.2561 + 3.2932*log10(len))/1000,lty=2)
+		panLab("80 cm",mag=1.6)
+		#abline(h=10^(-6.2561 + 3.2932*log10(len))/1000,lty=2)
 		
 		
 		# 1000 mm
@@ -121,17 +127,17 @@ figures<- function(n,form=NULL)
 		
 		segdat<-subset(pdat, length==len &basin=="LB")
 		segdat$year<- segdat$year-0.05
-		points(weight~year,segdat, type='p',pch=19,cex=1.5,col="grey")
-		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
-			x1=segdat$year,	y1=segdat$uci,col="grey")
+		points(weight~year,segdat, type='p',pch=19,cex=1.65,col="red")
+		segments(x0=segdat$year,y0=segdat$lci,lwd=3,
+			x1=segdat$year,	y1=segdat$uci,col="red")
 		
 		segdat<-subset(pdat, length==len &basin=="UB")
 		segdat$year<- segdat$year+0.05
-		points(weight~year,segdat, type='p',pch=17,cex=1.5,col='black')
-		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+		points(weight~year,segdat, type='p',pch=17,cex=1.6,col='black')
+		segments(x0=segdat$year,y0=segdat$lci,lwd=3,
 			x1=segdat$year,	y1=segdat$uci,col="black")		
-		panLab("1000 mm")
-		abline(h=10^(-6.2561 + 3.2932*log10(len))/1000,lty=2)
+		panLab("100 cm",mag=1.6)
+		#abline(h=10^(-6.2561 + 3.2932*log10(len))/1000,lty=2)
 		
 		
 		# 1200 mm
@@ -146,24 +152,24 @@ figures<- function(n,form=NULL)
 		
 		segdat<-subset(pdat, length==len &basin=="LB")
 		segdat$year<- segdat$year-0.05
-		points(weight~year,segdat, type='p',pch=19,cex=1.5,col="grey")
-		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
-			x1=segdat$year,	y1=segdat$uci,col="grey")
+		points(weight~year,segdat, type='p',pch=19,cex=1.6,col="red")
+		segments(x0=segdat$year,y0=segdat$lci,lwd=3,
+			x1=segdat$year,	y1=segdat$uci,col="red")
 		
 		segdat<-subset(pdat, length==len &basin=="UB")
 		segdat$year<- segdat$year+0.05
-		points(weight~year,segdat, type='p',pch=17,cex=1.5,col='black')
-		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+		points(weight~year,segdat, type='p',pch=17,cex=1.6,col='black')
+		segments(x0=segdat$year,y0=segdat$lci,lwd=3,
 			x1=segdat$year,	y1=segdat$uci,col="black")		
-		panLab("1200 mm")
-		abline(h=10^(-6.2561 + 3.2932*log10(len))/1000,lty=2)
+		panLab("120 cm",mag=1.6)
+		#abline(h=10^(-6.2561 + 3.2932*log10(len))/1000,lty=2)
 		
 		# 1400 mm
 		len<- 1400
 		ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))
 		plot(weight~year,pdat,subset=length==len  , type='n',
 			ylim=ylims,ylab="",xaxt='n',yaxt='n',las=1)
-		axis(1, at=axTicks(1),labels=TRUE, tck=0.02,cex.axis=1.3)
+		axis(1, at=axTicks(1),labels=TRUE, tck=0.02,cex.axis=1.6)
 		axis(2, at=axTicks(2),labels=TRUE, tck=0.02,las=1)
 		axis(3, at=axTicks(1),labels=FALSE, tck=0.02)
 		axis(4, at=axTicks(2),labels=FALSE, tck=0.02)
@@ -176,16 +182,16 @@ figures<- function(n,form=NULL)
 		
 		segdat<-subset(pdat, length==len &basin=="UB")
 		segdat$year<- segdat$year+0.05
-		points(weight~year,segdat, type='p',pch=17,cex=1.5,col='black')
-		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+		points(weight~year,segdat, type='p',pch=17,cex=1.6,col='black')
+		segments(x0=segdat$year,y0=segdat$lci,lwd=3,
 			x1=segdat$year,	y1=segdat$uci,col="black")		
-		panLab("1400 mm")
-		abline(h=10^(-6.2561 + 3.2932*log10(len))/1000,lty=2)
+		panLab("140 cm",mag=1.6)
+		#abline(h=10^(-6.2561 + 3.2932*log10(len))/1000,lty=2)
 		
         mtext(side=1, "Year",outer=TRUE,cex=1.3,line=1)
         mtext(side=2, "Predicted weight, kg",outer=TRUE,cex=1.3)
-        		legend("bottomright", c("Lower Basin","Upper Basin"),
-			pch=c(19,17),col=c("grey","black"),cex=1.75, bty='n')
+        legend("bottomright", c("Lower Basin","Upper Basin","Conf. Interval"),title="Explanation",
+			pch=c(19,17,NA),col=c("red","black","black"),lty=c(NA,NA,1),lwd=3,cex=1.45, bty='n',ncol=2)
 		}
 	
 	if(n==5)
@@ -214,7 +220,7 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-		panLab("800 mm")
+		panLab("800 mm",mag=1)
 		
 		# 1000 mm
 		len<- 1000
@@ -233,7 +239,7 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-				panLab("1000 mm")
+				panLab("1000 mm",mag=1)
 		# 1200 mm
 		len<- 1200
         ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))
@@ -251,7 +257,7 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-		panLab("1200 mm")
+		panLab("1200 mm",mag=1)
 
 		mtext(side=2, "Expected weight, kg",outer=TRUE, line=-0.5,cex=1.3)
 		mtext(side=1, "Year",outer=TRUE, line=2,cex=1.3)
@@ -285,7 +291,7 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="UB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-		panLab("800 mm")
+		panLab("800 mm",mag=1)
 		
 		# 1000 mm
 		len<- 1000
@@ -305,7 +311,7 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="UB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-		panLab("1000 mm")
+		panLab("1000 mm",mag=1)
         
 		# 1200 mm
 		len<- 1200
@@ -325,7 +331,7 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="UB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-		panLab("1200 mm")
+		panLab("1200 mm",mag=1)
         
 		# 1400 mm
 		len<- 1400
@@ -345,7 +351,7 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="UB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-		panLab("1400 mm")
+		panLab("1400 mm",mag=1)
         
 		mtext(side=2, "Predicted weight (kg)",outer=TRUE, line=-0.5,cex=1.3)
 		mtext(side=1, "Year",outer=TRUE, line=2,cex=1.3)
@@ -423,7 +429,7 @@ figures<- function(n,form=NULL)
 			})
 		legend("top",legend=c(2003:2016),col=cols,lwd=4,bg='white',ncol=4,cex=0.75,bty='n')
         box()
-		panLab("Lower basin")	
+		panLab("Lower basin",mag=1)	
 
         
 		plot(kn~length,x,lwd=4,las=1,ylab="Condition",ylim=c(0.6,1.3),
@@ -447,7 +453,7 @@ figures<- function(n,form=NULL)
         
 		mtext(side=1, "Length, mm",outer=TRUE,line=0,cex=1.3)
 		mtext(side=2, "Predicted condition, unitless",outer=TRUE,line=1.5,cex=1.3)
-		panLab("Upper basin")
+		panLab("Upper basin",mag=1)
 		}
 
     if(n==9)
@@ -479,7 +485,7 @@ figures<- function(n,form=NULL)
 		points(weight~year,segdat, type='p',pch=19,cex=1.5)
 		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
 			x1=segdat$year,	y1=segdat$uci)
-		panLab(paste("  ",len,"mm",sep=" "))
+		panLab(paste("  ",len,"mm",sep=" "),mag=1)
         tmp<-subset(pwcomp,lens==len)
         text(tmp$x,tmp$y,tmp$sig)
                 
@@ -497,7 +503,7 @@ figures<- function(n,form=NULL)
 		points(weight~year,segdat, type='p',pch=19,cex=1.5)
 		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
 			x1=segdat$year,	y1=segdat$uci)
-		panLab(paste("  ",len,"mm",sep=" "))
+		panLab(paste("  ",len,"mm",sep=" "),mag=1)
         tmp<-subset(pwcomp,lens==len)
         text(tmp$x,tmp$y,tmp$sig)
                 
@@ -515,7 +521,7 @@ figures<- function(n,form=NULL)
 		points(weight~year,segdat, type='p',pch=19,cex=1.5)
 		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
 			x1=segdat$year,	y1=segdat$uci)
-		panLab(paste("  ",len,"mm",sep=" "))
+		panLab(paste("  ",len,"mm",sep=" "),mag=1)
         tmp<-subset(pwcomp,lens==len)
         text(tmp$x,tmp$y,tmp$sig)
                 
@@ -532,7 +538,7 @@ figures<- function(n,form=NULL)
 		points(weight~year,segdat, type='p',pch=19,cex=1.5)
 		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
 			x1=segdat$year,	y1=segdat$uci)
-		panLab(paste("  ",len,"mm",sep=" "))	 
+		panLab(paste("  ",len,"mm",sep=" "),mag=1)	 
         tmp<-subset(pwcomp,lens==len)
         text(tmp$x,tmp$y,tmp$sig)
         
@@ -550,7 +556,7 @@ figures<- function(n,form=NULL)
 		points(weight~year,segdat, type='p',pch=19,cex=1.5)
 		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
 			x1=segdat$year,	y1=segdat$uci)
-		panLab(paste("  ",len,"mm",sep=" "))   
+		panLab(paste("  ",len,"mm",sep=" "),mag=1)   
         tmp<-subset(pwcomp,lens==len)
         text(tmp$x,tmp$y,tmp$sig)
         
@@ -567,7 +573,7 @@ figures<- function(n,form=NULL)
 		points(weight~year,segdat, type='p',pch=19,cex=1.5)
 		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
 			x1=segdat$year,	y1=segdat$uci)
-		panLab(paste("  ",len,"mm",sep=" "))     
+		panLab(paste("  ",len,"mm",sep=" "),mag=1)     
         mtext(side=1, "Year",line=1.5, cex=1.3,outer=TRUE)
         mtext(side=2, "Predicted weight, kg",line=-0.58, cex=1.3,outer=TRUE)
         tmp<-subset(pwcomp,lens==len)
@@ -575,6 +581,80 @@ figures<- function(n,form=NULL)
 
         
         }
-  
+      if(n=="9ppt")
+        {
+        #` plot of mean weight for 200-1200 mm fish for 2011 to 2016 in lower basin
+        
+		par(mfrow=c(3,1),mar=c(1,3,0,0),oma=c(3,3,1,1))
+        
+        pdat<- tables(4)
+		pdat$weight<- pdat$weight/1000
+		pdat$lci<- pdat$lci/1000
+		pdat$uci<- pdat$uci/1000
+		pdat<- subset(pdat,year>2010 & basin=="LB")
+
+        pwcomp<-tables(5)
+        pwcomp$sig<-ifelse(pwcomp$p.value<0.05/24,"Sig.dif.","No dif.")
+        pwcomp$lens<-round(pwcomp$lens,-1)
+        labMag<-2
+  		# 800 mm
+		len<- 800
+        ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))
+		plot(weight~year,pdat,subset=length==len  , type='n',
+			ylim=ylims,ylab="",xaxt='n',las=1,cex=1.5,yaxt='n')
+		axis(1, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(3, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(2, at=axTicks(2), labels=TRUE,las=1,tck=0.02,cex.axis=1.6)
+ 		segdat<-subset(pdat, length==len)
+		segdat$year<- segdat$year-0.05
+		points(weight~year,segdat, type='p',pch=19,cex=1.5)
+		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+			x1=segdat$year,	y1=segdat$uci)
+		panLab(paste("  ",len/10,"cm",sep=" "),mag=labMag)	 
+        tmp<-subset(pwcomp,lens==len)
+        text(tmp$x,tmp$y,tmp$sig,cex=2)
+       
+    
+        # 1000 mm
+		len<- 1000
+        ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))
+		plot(weight~year,pdat,subset=length==len  , type='n',
+			ylim=ylims,ylab="",xaxt='n',las=1,cex=1.5,yaxt='n')
+		axis(1, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(3, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(2, at=axTicks(2), labels=TRUE,las=1,tck=0.02,cex.axis=1.6)
+ 		segdat<-subset(pdat, length==len)
+		segdat$year<- segdat$year-0.05
+		points(weight~year,segdat, type='p',pch=19,cex=1.5)
+		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+			x1=segdat$year,	y1=segdat$uci)
+		panLab(paste("  ",len/10,"cm",sep=" "),mag=labMag)	
+        tmp<-subset(pwcomp,lens==len)
+        text(tmp$x,tmp$y,tmp$sig,cex=2)
+                
+           
+       	# 1200 mm
+		len<- 1200
+        ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))
+		plot(weight~year,pdat,subset=length==len  , type='n',
+			ylim=ylims,ylab="",xaxt='n',las=1,cex=1.5,yaxt='n')
+		axis(1, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(3, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(2, at=axTicks(2), labels=TRUE,las=1,tck=0.02,cex.axis=1.6)
+ 		segdat<-subset(pdat, length==len)
+		segdat$year<- segdat$year-0.05
+		points(weight~year,segdat, type='p',pch=19,cex=1.5)
+		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+			x1=segdat$year,	y1=segdat$uci)
+		panLab(paste("  ",len/10,"cm",sep=" "),mag=labMag)	
+        tmp<-subset(pwcomp,lens==len)
+        text(tmp$x,tmp$y,tmp$sig,cex=2)
+                
+        mtext(side=1, "Year",outer=TRUE,cex=1.3,line=1.75)
+        mtext(side=2, "Predicted weight, kg",outer=TRUE,cex=1.3,line=1.35)
+        axis(1, at=axTicks(1),labels=TRUE, tck=0.02,cex.axis=1.6)
+
+        
+        }
 
 }
