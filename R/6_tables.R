@@ -45,16 +45,18 @@ tables<-function(n)
 			year_f=unique(lw$year_f),
 			basin=unique(lw$basin))
 		pdat$llen<- log(pdat$length)
+		pdat$llength<- log(pdat$length)
 		pdat$lwgh<- predict(fit,pdat)
 		pdat$lwgh_se<-predict(fit,pdat,se.fit=TRUE,interval="confidence")$se.fit
 		pdat$lci<- exp(pdat$lwgh-1.96*pdat$lwgh_se)
 		pdat$uci<- exp(pdat$lwgh+1.96*pdat$lwgh_se)
 		pdat$weight<- exp(pdat$lwgh)
 		pdat$year<-as.numeric(as.character(pdat$year_f))
-		pdat$kn<- pdat$weight/ (10^(-5.9205 + 3.1574*log10(pdat$length)))# NEW RANDALL MOD
-		pdat$kn_lci<- pdat$lci/(10^(-5.9205 + 3.1574*log10(pdat$length)))# NEW RANDALL MOD
-		pdat$kn_uci<- pdat$uci/ (10^(-5.9205 + 3.1574*log10(pdat$length)))# NEW RANDALL MOD
+		pdat$kn<- pdat$weight/ Ws(pdat$length)# NEW RANDALL MOD
+		pdat$kn_lci<- pdat$lci/Ws(pdat$length)# NEW RANDALL MOD
+		pdat$kn_uci<- pdat$uci/ Ws(pdat$length)# NEW RANDALL MOD
 		pdat<- pdat[order(pdat$year,pdat$length),]
+        pdat<-pdat[,-7]# drop se
 		return(pdat)
 		}
     if(n==5)

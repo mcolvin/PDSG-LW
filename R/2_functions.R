@@ -10,6 +10,12 @@
 # POWER
 # 
 
+# ALTERNATIVE STANDARD WEIGHT
+Ws<-function(L)
+    {
+    Ws<-(10^(-5.9205 + 3.1574*log10(L)))
+    }
+
 panLab<-function(label,mag){legend("topleft",title=label, legend="", bty="n",cex=mag)}
 
 

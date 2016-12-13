@@ -15,65 +15,74 @@ source("./R/5_figures.R")
 source("./R/6_tables.R")
 source("./R/7_analysis.R")
 
+# BE SURE TO CHANGE THE DRAFT FOLDER TO INTERATE
+# FIGURE DRAFTS.
 
 dev.new(height=8.5,width=11)
 figures(1,form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-01.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-01.pdf",
     type="pdf")
 dev.off()   
 
     
 dev.new(height=10,width=10)
 figures(2,form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-02.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-02.pdf",
     type="pdf")
 dev.off()  
 
 
 dev.new(height=8.5,width=11)
 figures(3,form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-03.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-03.pdf",
     type="pdf")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-14.pdf",
+    type="pdf")    
+    
 dev.off()     
 
   
 dev.new(height=8.5,width=11)
 figures(4,form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-04.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-04.pdf",
+    type="pdf")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-15.pdf",
     type="pdf")
 dev.off()  
 
 
 dev.new(height=10,width=10)
 figures(5,form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-05.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-05.pdf",
     type="pdf")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-16.pdf",
+    type="pdf")   
 dev.off()  
 
 dev.new(height=10,width=10)
 figures(6,form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-06.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-06.pdf",
     type="pdf")
  dev.off()  
 dev.new(height=10,width=10)
 figures(7,form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-07.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-07.pdf",
     type="pdf")
  dev.off()  
     dev.new(height=10,width=10)
 figures(8,form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-08.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-08.pdf",
     type="pdf")
   dev.off()     
     dev.new(height=10,width=10)
 figures(9,form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-09.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-09.pdf",
     type="pdf")
  dev.off()  
 
 dev.new(height=8.5,width=11)
 figures("9ppt",form="USGS")
-savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/figure-09ppt.pdf",
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-09ppt.pdf",
     type="pdf")
  dev.off()     
     
