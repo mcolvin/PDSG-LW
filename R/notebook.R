@@ -68,7 +68,9 @@ dev.new(height=10,width=10)
 figures(7,form="USGS")
 savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-07.pdf",
     type="pdf")
- dev.off()  
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-17.pdf",
+    type="pdf")   
+dev.off()  
     dev.new(height=10,width=10)
 figures(8,form="USGS")
 savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-08.pdf",
