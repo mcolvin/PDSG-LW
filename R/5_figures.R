@@ -1,5 +1,37 @@
 figures<- function(n,form=NULL)
 	{
+    if(n=="9b")
+        {
+        #tmp<- subset(dat$Kn, basin=="LB")
+        tmp<- subset(dat$Kn, segment_id %in% c(7,8,9,10,11,13,14))
+        tmp<- subset(tmp, !(is.na(kn)))
+                tmp$tmp<-1
+        capt<- aggregate(tmp~year,tmp, sum)
+        cond<- ddply(tmp,.(year),summarize,
+            avg=mean(kn),
+            mnn=min(kn),
+            mxx=max(kn),
+            n=length(kn),
+            se=sd(kn)/sqrt(length(kn)))
+        cond$uci<- cond$avg+1.96*cond$se
+        cond$lci<- cond$avg-1.96*cond$se
+        par(mar=c(4,4,1,5))
+        plot(n~year,cond,type="h",col="lightgrey",lwd=10,lend=2,
+            xaxt='n',yaxt='n',ylab="Average Kn",xlab="") 
+        axis(side=4, at=axTicks(2),las=1)            
+        text(x=c(2003:2017), 
+            y=par("usr")[3]-8, 
+            labels=c(2003:2017), 
+            xpd=TRUE,adj=1, 
+            srt=45)      
+
+        par(new=TRUE)     
+        plot(avg~year,cond,type="p",pch=19,col="black",cex=1.3,las=1,
+            ylim=c(0.8,1.15),ylab="",xlab="",xaxt='n')
+        segments(cond$year, cond$lci,cond$year,
+            cond$uci,lwd=2)
+        mtext(side=4, "Number of fish captured",line=3)
+        }    
 	if(n==1)
 		{
         par(mfrow=c(4,4),mar=c(0,0,1,1),oma=c(6,6,1,1),cex.axis=1.5)
@@ -221,7 +253,7 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-		panLab("800 mm",mag=1)
+		panLab("800 millimeter",mag=1)
 		
 		# 1000 mm
 		len<- 1000
@@ -240,7 +272,7 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-				panLab("1000 mm",mag=1)
+				panLab("1,000 millimeter",mag=1)
 		# 1200 mm
 		len<- 1200
         ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))*c(0.9,1.1)
@@ -258,14 +290,91 @@ figures<- function(n,form=NULL)
 		par(new=TRUE)
 		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="",cex=1.5,xaxt='n')
         axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
-		panLab("1200 mm",mag=1)
+		panLab("1,200 millimeter",mag=1)
 
-		mtext(side=2, "Expected weight, kg",outer=TRUE, line=-0.5,cex=1.3)
+		mtext(side=2, "Predicted fish weight, in kilograms",outer=TRUE, line=-0.5,cex=1.3)
 		mtext(side=1, "Year",outer=TRUE, line=2,cex=1.3)
-		mtext(side=4, "Mean condition, unitless",outer=TRUE, cex=1.3,line=4)
-		legend("topright",c("Predicted weight","Mean condition"),pch=c(19,1),bty='n',cex=1.3)
+		mtext(side=4, "Mean Alternative Kn",outer=TRUE, cex=1.3,line=4)
+       
+		legend("topright",legend=c("Predicted weight","Mean Kn"),
+            title="Explanation",
+            pch=c(19,1),bty='n',cex=1.3)
 		}
-	if(n==6)
+	if(n==5.1)
+		{## upated for BA for Tim Welker
+		pdat<- tables(4)
+		kns<-tables(1)
+		par(mfrow=c(3,1),mar=c(2,4,0,0),oma=c(3,3,1,5))
+		pdat$weight<- pdat$weight/1000
+		pdat$lci<- pdat$lci/1000
+		pdat$uci<- pdat$uci/1000
+		
+		# 800 mm
+		len<- 800
+		ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))*c(0.9,1.1)
+		plot(weight~year,pdat,subset=length==len  , type='n',
+			ylim=ylims,ylab="",xaxt='n',las=1,cex=1.5,yaxt='n')
+		axis(1, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(3, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(2, at=axTicks(2), labels=TRUE,las=1,tck=0.02,cex.axis=1.3)
+        
+		segdat<-subset(pdat, length==len &basin=="LB")
+		segdat$year<- segdat$year-0.05
+		points(weight~year,segdat, type='p',pch=19,cex=1.5)
+		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+			x1=segdat$year,	y1=segdat$uci)
+		par(new=TRUE)
+		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="",cex=1.5,xaxt='n')
+        axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
+		panLab("800 millimeter",mag=1)
+		
+		# 1000 mm
+		len<- 1000
+		ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))*c(0.9,1.1)
+				plot(weight~year,pdat,subset=length==len  , type='n',
+			ylim=ylims,ylab="",xaxt='n',las=1,cex=1.5,yaxt='n')
+		axis(1, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(3, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(2, at=axTicks(2), labels=TRUE,las=1,tck=0.02,cex.axis=1.3)
+        
+		segdat<-subset(pdat, length==len &basin=="LB")
+		segdat$year<- segdat$year-0.05
+		points(weight~year,segdat, type='p',pch=19,cex=1.5)
+		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+			x1=segdat$year,	y1=segdat$uci)
+		par(new=TRUE)
+		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="",cex=1.5,xaxt='n')
+        axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
+				panLab("1,000 millimeter",mag=1)
+		# 1200 mm
+		len<- 1200
+        ylims<-range(unlist(pdat[which(pdat$length==len),c(7,8)]))*c(0.9,1.1)
+		plot(weight~year,pdat,subset=length==len  , type='n',
+			ylim=ylims,ylab="",xaxt='n',las=1,cex=1.5,yaxt='n')
+		axis(1, at=axTicks(1),labels=TRUE,tck=0.02)
+		axis(3, at=axTicks(1),labels=FALSE,tck=0.02)
+		axis(2, at=axTicks(2), labels=TRUE,las=1,tck=0.02,cex.axis=1.3)
+        
+		segdat<-subset(pdat, length==len &basin=="LB")
+		segdat$year<- segdat$year-0.05
+		points(weight~year,segdat, type='p',pch=19,cex=1.5)
+		segments(x0=segdat$year,y0=segdat$lci,lwd=2,
+			x1=segdat$year,	y1=segdat$uci)
+		par(new=TRUE)
+		plot(kn_mean~year, kns,subset=basin=="LB",yaxt='n',ylab="",cex=1.5,xaxt='n')
+        axis(side=4,at=axTicks(2),labels=TRUE,tck=0.02,cex.axis=1.3,las=1)
+		panLab("1,200 millimeter",mag=1)
+
+		mtext(side=2, "Predicted fish weight, in kilograms",outer=TRUE, line=-0.5,cex=1.3)
+		mtext(side=1, "Year",outer=TRUE, line=2,cex=1.3)
+		mtext(side=4, "Mean Alternative Kn",outer=TRUE, cex=1.3,line=4)
+       
+		legend("topright",legend=c("Predicted weight","Mean Kn"),
+            title="Explanation",
+            pch=c(19,1),bty='n',cex=1.3)
+		}
+
+        if(n==6)
 		{
 		pdat<- tables(4)
 		kns<-tables(1)

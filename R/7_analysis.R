@@ -13,6 +13,3 @@ fit08<- lm(lwgh~year_f+llen*basin,lw)
 fit09<- lm(lwgh~llen*year_f+basin,lw)
 fit<- lm(lwgh~llen*year_f*basin,lw)
 
-
- 
-  

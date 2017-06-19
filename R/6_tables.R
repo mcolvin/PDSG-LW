@@ -46,6 +46,7 @@ tables<-function(n)
 			basin=unique(lw$basin))
 		pdat$llen<- log(pdat$length)
 		pdat$llength<- log(pdat$length)
+        fit<- lm(lwgh~llen*year_f*basin,lw)
 		pdat$lwgh<- predict(fit,pdat)
 		pdat$lwgh_se<-predict(fit,pdat,se.fit=TRUE,interval="confidence")$se.fit
 		pdat$lci<- exp(pdat$lwgh-1.96*pdat$lwgh_se)

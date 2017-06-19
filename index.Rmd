@@ -1,0 +1,326 @@
+---
+title: "Length weight analysis of covariance"
+author: Michael E. Colvin
+date: 4 October 2016
+output:
+  md_document:
+    variant: markdown_github
+  html_document:
+    theme: flatly
+    highlight: espresso
+    toc: FALSE
+---
+
+
+
+```{r,echo=FALSE}
+## Analysis preliminaries
+library(pander)
+source("R/1_global.R")
+source("R/2_functions.R")
+#dat<-readRDS("dat/dat.RDS")
+source("R/3_load.R") ## TAKES A BIT TO LOAD
+source("R/4_clean.R")
+
+source("R/5_figures.R")
+source("R/6_tables.R")
+source("R/7_analysis.R")
+
+
+```
+new figure for Tim Welker see email from 6/14/2017
+
+figures(5.1)
+savePlot("output/fig16_est_weight_lower.wmf",type="wmf")
+savePlot("output/fig16_est_weight_lower.pdf",type="pdf")
+savePlot("output/fig16_est_weight_lower.jpg",type="jpg")
+dev.off()
+figures("9b")
+savePlot("output/fig9b_AltLower.wmf",type="wmf")
+savePlot("output/fig9b_AltLower.pdf",type="pdf")
+savePlot("output/fig9b_AltLower.jpg",type="jpg")
+dev.off()
+### Analysis source
+
+Analysis source code can be viewed at [https://github.com/mcolvin/PDSG-LW](https://github.com/mcolvin/PDSG-LW).
+
+
+
+### Analysis overview
+
+This analysis fits length-weight data for pallid sturgeon captured in the upper (RPMA 2 and 3) and
+lower (RPMA 4) basins of the Missouri River.  The rationale for this analysis is that condition is 
+an index of weight given an expected weight and therefore modelling expected weight as a function
+of length using the base model $log(Weight) = log(a)+b\cdot log(Length)$ will illustrate changes in
+expected weight. This approach allows evaluating how expected weight is changing over time that
+complements analyses of condition. Specifically, if conditions is decreasing over time, it should index
+a decrease in expected fish weight for a given length. This analysis variant was used to 
+answer the following questions:
+
+1. Does the length-weight relationship vary among years and between basins?
+1. Does mean kn correlate with predicted weights at varying sizes?
+1. If not why the discrepancy?
+
+
+
+### Methods in a nutshell
+
+1. Fit length-weight data as a linear model by log transforming length and weight
+1. Estimate effect of year, basin and specific interactions
+1. Year is treated as a factor rather than continuous.
+1. Use AICc model averaging to evaluate evidence for differences among year and basins
+1. Used 'top' model to predict weights and 95% confidence intervals for 800 (i.e., reproductive fish)
+to 1400 mm pallid sturgeon by increments of 200. 
+1. For additional analyses the 'top' model was used to predict weights 200 to 1200 or 1600 mm
+pallid sturgeon by increments of 1 for lower and upper basins respectively.
+1. Predicted weights were used to calculate condition for varying length fish for each basin
+and year combination by dividing the predicted weight by the standard weight calculated as 
+$W_{standard}=10^(-6.2561)\cdot Length^{3.2932}$  
+
+
+
+
+### Question 1. Does the length-weight relationship vary among years and between basins?
+
+Short answer, yes.  There is overwhelming evidence that length weight model parameters ($a$ and $b$)
+should vary among year and basin.  The AICc model selection table below provides the support.
+
+```{r, echo=FALSE}
+pander(tables(2),rownames=FALSE)
+```
+
+The model selection results indicate that the length weight relationship should be viewed like
+the figures 1 and 2 below where there is essentially a separate length-weight relationship for each year
+and basin.  
+
+```{r,echo=FALSE}
+figures(1)
+```
+
+_Figure 1. Pallid sturgeon weight (y-axis) and length (x-axis) for 2003 to 2016 grouped by Missouri River
+basin (Upper; pink open circles,lower; blue open circles)._  
+
+```{r,echo=FALSE}
+figures(2)# plot of mean weight at length for RPMA 2 and 4
+```  
+
+_Figure 2. Plot of weight (y-axis) and length (x-axis) on log scale for Pallid Sturgeon captured in Missouri River
+basins (Upper; pink open circles, lower; blue open circles). 
+Lines represent best fit linear models predicting weight from length for data in each panel and group._
+
+### Question 2. Does mean kn correlate with predicted weights at varying sizes?
+
+Figure 3 below illustrates boxplots of condition among years and basins.
+Of interest to the skinny fish analysis are the years post 2011 that show a decline in condition.
+
+```{r,echo=FALSE}
+figures(3)# boxplot of Kn given mean weight at length for RPMA 2 and 4
+``` 
+
+_Figure 3. Plot of condition (y-axis) and day of year (x-axis) for Pallid Sturgeon captured in
+the upper and lower basins._
+
+
+Evaluating plots of predicted weight for a given length by year and basin in Figure 4 below we 
+generally see a similar view as Figure 3 above.
+
+
+```{r,echo=FALSE}
+figures(4)# mean weight for lengths
+```  
+
+_Figure 4. Plot of estimated weight (y-axis) and year (x-axis) for varying pallid sturgeon lengths
+(800, 1000, 1200, and 1400 mm).
+Lower basin estimates were not included for fish 1400 mm because they were not observed.
+Vertical lines denote 95% confidence intervals. The dotted horizontal line represents the standard
+weight used to calculate condition._
+
+
+
+It should follow that condition (averaged by year and basin) and predicted weight for a 
+given length by year and basin should exhibit similar patterns.  Figure 3 above plotted condition
+by year and basin, which is similar to previous analyses presented to MRRIC and the ISAP and 
+Figure 4 illustrated how the fitted model was used to estimate the weight for a given length
+pallid sturgeon. Superimposing the average condition factors on the data from Figure 4 above 
+for the lower and upper basin in Figures 5 and 6 below shows a discrepancy among some of
+the patterns of average condition and predicted weight at length.  
+
+
+
+```{r,echo=FALSE}
+figures(5)
+``` 
+
+_Figure 5. Estimated weight for varying length lower basin pallid sturgeon among years.
+Open circles denote mean condition values among years for lower basin pallid sturgeon._
+
+```{r,echo=FALSE}
+figures(6)
+``` 
+
+_Figure 6. Estimated weight for varying length upper basin pallid sturgeon among years.
+Open circles denote mean condition values among years for upper basin pallid sturgeon._
+
+
+### Question 3. If not why the discrepancy?
+
+
+What is going on with the discrepancy of predicted weight and mean condition?
+The lower basin mean condition appears to track well with predicted weight across
+a range of lengths.
+But the last 5 years or so for the upper basin showed a different picture with predicted weight
+increasing but mean condition decreasing.
+Why is that?
+Looking at predicted weight for the range of lengths (200 to 1400 mm) for upper basin fish
+for 2015 and 2016 in Figure 7 below we see that condition varies with length and the pattern
+varies between the 2015 and 2016.
+Mean condition is that it is being driven by the bulk of the catch being smaller fish.
+Despite larger fish having a higher condition in 2016 the majority of those fish were below 800 mm.
+Contrasted with the 2015 fish where fish below 800 mm had a relatively high condition which
+in turn caused mean condition to be higher in 2015 relative to 2016.
+
+
+```{r,echo=FALSE}
+figures(7)
+``` 
+
+_Figure 7. Estimated condition values for upper basin pallid sturgeon of varying length
+in 2015 and 2016.  The dotted lines illustrate density of observations._
+
+
+
+The above condition can be problematic in terms of comparisons of condition because the length-weight
+relationships are not parallel for all the basin year combinations (i.e., b is equal for all combinations).
+Figure 8 below illustrates the predicted condition for each year and basin.  
+
+
+```{r,echo=FALSE}
+figures(8)
+``` 
+
+_Figure 8. Estimated condition values for lower and upper basin pallid sturgeon of varying length
+from 2003 to 2016.  Line coloration indicates year with 2003 being greay and 2016 being black. _
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+```{r }
+setwd("C:/Users/mcolvin/Google Drive/PDSG-Data/skinny-fish")
+
+source("./src/1_global.R")
+source("./src/2_functions.R")
+source("./src/3_load.R")
+source("./src/4_clean.R")
+source("./src/5_figures.R")
+source("./src/6_tables.R")
+
+
+source("./src/7_analysis.R")
+
+
+figures(1)
+figures(2)
+figures(3)
+figures(4)
+
+tables(1)
+```
+
+
+#'---
+#'title: "My Notebook"
+#'output: html_document
+#'---
+
+
+
+setwd("C:/Users/mcolvin/Documents/projects/pallid sturgeon/analysis/PDSG-LW")
+
+source("./R/1_global.R")
+source("./R/2_functions.R")
+source("./R/3_load.R")
+source("./R/4_clean.R")
+source("./R/5_figures.R")
+source("./R/6_tables.R")
+source("./R/7_analysis.R")
+
+# BE SURE TO CHANGE THE DRAFT FOLDER TO INTERATE
+# FIGURE DRAFTS.
+
+dev.new(height=8.5,width=11)
+figures(1,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-01.pdf",
+    type="pdf")
+dev.off()   
+
+    
+dev.new(height=10,width=10)
+figures(2,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-02.pdf",
+    type="pdf")
+dev.off()  
+
+
+dev.new(height=8.5,width=11)
+figures(3,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-03.pdf",
+    type="pdf")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-14.pdf",
+    type="pdf")    
+    
+dev.off()     
+
+  
+dev.new(height=8.5,width=11)
+figures(4,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-04.pdf",
+    type="pdf")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-15.pdf",
+    type="pdf")
+dev.off()  
+
+
+dev.new(height=10,width=10)
+figures(5,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-05.pdf",
+    type="pdf")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-16.pdf",
+    type="pdf")   
+dev.off()  
+
+dev.new(height=10,width=10)
+figures(6,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-06.pdf",
+    type="pdf")
+ dev.off()  
+dev.new(height=10,width=10)
+figures(7,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-07.pdf",
+    type="pdf")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-17.pdf",
+    type="pdf")   
+dev.off()  
+    dev.new(height=10,width=10)
+figures(8,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-08.pdf",
+    type="pdf")
+  dev.off()     
+    dev.new(height=10,width=10)
+figures(9,form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-09.pdf",
+    type="pdf")
+ dev.off()  
+
+dev.new(height=8.5,width=11)
+figures("9ppt",form="USGS")
+savePlot("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-03/figure-09ppt.pdf",
+    type="pdf")
+ dev.off()     
+    
+write.csv(tables(2),"C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/PDSG-LW/Drafts/Draft-01/model-selection.csv")
