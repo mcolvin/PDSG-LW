@@ -27,6 +27,9 @@ source("./R/6_tables.R")
 source("./R/7_analysis.R")
 
 
+figures("9b")
+figures("16")
+
 ```
 ### Analysis source
 

@@ -28,18 +28,53 @@ source("R/7_analysis.R")
 
 
 ```
+
+## figure for AM Report on condition with lengths for 200, 1200 by 200 mm
+figures(5.2)
+savePlot("output/AM-report-pred-weight.wmf",type="wmf")
+savePlot("output/AM-report-weight.wmf.pdf",type="pdf")
+savePlot("output/AM-report-weight.wmf.jpg",type="jpg")
+dev.off()
+
+
+
 new figure for Tim Welker see email from 6/14/2017
 
 figures(5.1)
+mtext(side=1,
+paste0("Updated: ", format(Sys.time(), "%m/%d/%Y %X"),sep=""),
+    line=4,cex=0.75,adj=1)
 savePlot("output/fig16_est_weight_lower.wmf",type="wmf")
 savePlot("output/fig16_est_weight_lower.pdf",type="pdf")
 savePlot("output/fig16_est_weight_lower.jpg",type="jpg")
 dev.off()
 figures("9b")
+mtext(side=1,
+   paste0("Updated: ", format(Sys.time(), "%m/%d/%Y %X"),sep=""),
+    line=3,cex=0.75,adj=1)
 savePlot("output/fig9b_AltLower.wmf",type="wmf")
 savePlot("output/fig9b_AltLower.pdf",type="pdf")
 savePlot("output/fig9b_AltLower.jpg",type="jpg")
 dev.off()
+
+
+
+
+new figure for AM Report December 2017
+
+figures(5.2)
+savePlot("output/am-report-condition.wmf",type="wmf")
+#savePlot("output/am-report-condition.pdf",type="pdf")
+savePlot("output/am-report-condition.jpg",type="jpg")
+dev.copy2pdf(file="output/am-report-condition.pdf",useDingbats=FALSE,family="sans")
+
+dev.off()
+
+cairo_pdf(file="output/test2.pdf")
+figures(5.2)
+dev.off()
+
+
 ### Analysis source
 
 Analysis source code can be viewed at [https://github.com/mcolvin/PDSG-LW](https://github.com/mcolvin/PDSG-LW).

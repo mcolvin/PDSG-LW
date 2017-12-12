@@ -118,7 +118,19 @@ tables<-function(n)
         y<- exp(aggregate(lsmean~llen,yyy$lsmeans,mean)[,2])/1000
         tmp<- rbind(tmp,data.frame(yr1=yrs[1],yr2=yrs[2],lens=exp(lens),
             yyy$comparisons,y=y))
-          
+            
+        yrs<-c(2016,2017)
+        lens<-log(c(200,400,600,800,1000,1200))
+        yy<-lsmeans(fit, ~ year_f |llen +basin, 
+            at = list(llen = lens,
+            basin="LB",
+            year_f=factor(yrs,levels(lw$year_f))))
+        yyy<-cld(yy,by="llen",details=TRUE)
+        y<- exp(aggregate(lsmean~llen,yyy$lsmeans,mean)[,2])/1000
+        tmp<- rbind(tmp,data.frame(yr1=yrs[1],yr2=yrs[2],lens=exp(lens),
+            yyy$comparisons,y=y))          
+ 
+ 
         tmp$x<- tmp$yr1+0.5
         return(tmp)
         } 

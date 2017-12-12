@@ -14,8 +14,9 @@ fish$tagnumber<- toupper(fish$tagnumber)
 
 
 
-# CLEAN AND MANINIPULATE
-tmp<- merge(eff,fish,by.x="uniqueidentifier",by.y="uniqueid")
+# CLEAN AND MANIPULATE
+tmp<- merge(eff,fish[,-match(c("segment_id","year"),names(fish))],
+    by.x="uniqueidentifier",by.y="uniqueid")
 
 # SUBSET OUT FISH THAT ARE OUTLIERS 
 tmp<-subset(tmp, !is.na(length))
@@ -45,7 +46,8 @@ stocked<- subset(stocked,!(duplicated(stocked$pit_tag)))
 stocked$origin<- "Hatchery"
 
 ## MERGE STOCKING/HATHCHERY DATA WITH PSPAP DATA
-hatchery2<- merge(tmp2,stocked, by.x="tagnumber",by.y="pit_tag",all.x=TRUE)
+hatchery2<- merge(tmp2,stocked, 
+    by.x="tagnumber",by.y="pit_tag",all.x=TRUE)
 hatchery2$hatchery<- as.character(hatchery2$hatchery)
 
 ### ASSIGN HATCHERY ORIGIN
@@ -100,23 +102,23 @@ out$kn<- out$weight/(10^(-5.9205 + 3.1574*log10(out$length)))
 
 # ADD THE NEW DATA FROM TIM FOR 2016 AND 2017
 ## FIRST CHECK TO MAKE SURE NOTHING IS DUPLICATED
-names(new_data)<- tolower(names(new_data))
-new_data$llen<- log(new_data$length)
-new_data$lwgh<- log(new_data$weight)
-new_data$segment_id<-as.factor(new_data$segment_id)
-new_data$year_f<-as.factor(new_data$year)
+#names(new_data)<- tolower(names(new_data))
+#new_data$llen<- log(new_data$length)
+#new_data$lwgh<- log(new_data$weight)
+#new_data$segment_id<-as.factor(new_data$segment_id)
+#new_data$year_f<-as.factor(new_data$year)
 
-basins<- aggregate(kn~segment_id+basin,out,length)[,-3]
-new_data<- merge(new_data, basins, by="segment_id", all.x=TRUE)
+#basins<- aggregate(kn~segment_id+basin,out,length)[,-3]
+#new_data<- merge(new_data, basins, by="segment_id", all.x=TRUE)
 # RECALCULATE KN USING RANDALL'S MODIFIED KN
 # WRITE OVER SHUMAN'S KN 
-new_data$kn<- new_data$weight/(10^(-5.9205 + 3.1574*log10(new_data$length)))
+#new_data$kn<- new_data$weight/(10^(-5.9205 + 3.1574*log10(new_data$length)))
 
 ## SUBSET OUT ALREADY EXISTING RECORDS BEFORE 
 ## APPENDING TO THE DATA
-new_data<- new_data[which((new_data$f_id %in% out$f_id)==FALSE),]
+#new_data<- new_data[which((new_data$f_id %in% out$f_id)==FALSE),]
 
-out<- rbind.fill(out,new_data)
+#out<- rbind.fill(out,new_data)
 
 dat<- list(Kn=out)
 
