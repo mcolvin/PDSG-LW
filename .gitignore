@@ -18,6 +18,8 @@ $RECYCLE.BIN/
 *.SESSION
 *.potx
 *.accdb
+*.laccdb
+*.ldb
 *.xlsx
 *.rds
 
