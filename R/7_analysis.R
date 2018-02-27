@@ -1,4 +1,4 @@
-lw<- subset(dat$Kn,segment_id%in%c(1:14))
+
 lw$jdaysq<- lw$jday*lw$jday
 
 

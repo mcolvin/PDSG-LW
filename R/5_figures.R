@@ -1,4 +1,4 @@
-figures<- function(n,form=NULL)
+figures<- function(n,form=NULL,seg=NULL,ll=NULL,...)
 	{
     if(n=="9b")
         {
@@ -626,7 +626,284 @@ figures<- function(n,form=NULL)
             line=4,cex=0.75,adj=1)
 		}
 
-        if(n==6)
+    if(n==5.3)
+		{## for AM report 20180213 predicted weight by segment
+	
+        lw$freq<-1
+        combos<- ddply(lw[lw$segment_id %in% c(2,3,4,7,8,9,10,13,14),],
+            .(segment_id,year_f),summarize,
+            freq=sum(freq),
+            .drop=FALSE)
+        combos<-subset(combos,segment_id %in% c(2,3,4,7,8,9,10,13,14))       
+      
+        
+        
+        fit<- lm(lwgh~llen*year_f*segment_id,lw,
+            subset=segment_id %in% c(2,3,4,7,8,9,10,13,14))
+        tmp<- data.frame()   
+        yrs<-cbind(c(2003:2016),c(2004:2017))
+        lens<-log(c(200,400,600,800,1000,1200))
+        segment_id<-factor(c(2,3,4,7,8,9,10,13,14),levels=levels(lw$segment_id))
+        for(j in segment_id)
+            {
+            for(i in 1:nrow(yrs))
+                {
+                yy<-lsmeans(fit, ~ year_f |llen+segment_id, 
+                    at = list(llen = lens,
+                    segment_id=factor(j,levels(lw$segment_id)),
+                    year_f=factor(as.vector(yrs[i,]),levels(lw$year_f))))
+                yyy<-cld(yy,by="llen",details=TRUE)
+                yyy$lsmeans[is.na(yyy$lsmeans)]<-0
+                y<- exp(aggregate(lsmean~llen,yyy$lsmeans,mean)[,2])/1000
+                y_hat<-as.data.frame(yyy$lsmeans)
+                y_hat<- y_hat[order(y_hat$llen,y_hat$year_f),]             
+                y_hat<-matrix(exp(y_hat$lsmean)/1000,ncol=2,byrow=TRUE)
+                
+                tmp<- plyr::rbind.fill(tmp,data.frame(
+                    yr1=yrs[i,1],
+                    yr2=yrs[i,2],
+                    yr1_est= y_hat[,1],
+                    yr2_est= y_hat[,2],
+                    lens=round(exp(lens),0),
+                    yyy$comparisons,
+                    dif=y,
+                    segment_id=j))      
+                }
+            }
+        tmp$plt<-ifelse(tmp$p.value<=0.05,1,0)
+   
+        segment<- seg      
+		par(mfrow=c(3,2),mar=c(0.5,3.5,0,0),oma=c(6,3,2,1))
+
+        lens<- c(200,400,600,800,1000,1200)
+        for(i in 1:length(lens))
+            {
+            len=lens[i]        
+            pdat<- expand.grid(len=len,year_f=levels(lw$year_f),
+                segment_id=factor(segment,levels(lw$segment_id)))
+            pdat$llen<-log(pdat$len)        
+            pdat$lwgh<- predict(fit,pdat)
+            pdat$lwgh_se<-predict(fit,pdat,se.fit=TRUE,interval="confidence")$se.fit
+            pdat$lci<- exp(pdat$lwgh-1.96*pdat$lwgh_se)
+            pdat$uci<- exp(pdat$lwgh+1.96*pdat$lwgh_se)
+            pdat$weight<- exp(pdat$lwgh)
+            pdat[which(combos[combos$segment_id==segment,]$freq<5),-c(1:3)]<-NA
+            pdat$year<-as.numeric(as.character(pdat$year_f))
+            ylims<-range(na.omit(unlist(pdat[,c(7,8)])))*c(0.9,1.1)/1000
+            plot(weight/1000~year,pdat,type='p',
+                ylim=ylims,ylab="",xaxt='n',las=1,cex=1.5,yaxt='n',pch=19)
+            axis(1, at=c(2000:2025),labels=FALSE,tck = 0.02)
+            axis(3, at=c(2000:2025),labels=FALSE,tck = 0.02)
+            #axis(3, at=axTicks(1),labels=FALSE)
+            axis(2, at=axTicks(2), labels=TRUE,las=1,cex.axis=1.3,tck = 0.02)
+            axis(4, at=axTicks(2), labels=FALSE,las=1,cex.axis=1.3,tck = 0.02)        
+            
+            ## CIs
+            segments(x0=pdat$year,y0=pdat$lci/1000,lwd=2,
+                x1=pdat$year,	y1=pdat$uci/1000)
+            #panLab(paste(" Segment ",segment,": ",len,"cm",sep=""),mag=1)
+            panLab(paste("  ",len,"cm",sep=""),mag=1)
+           
+            ## if sig dif
+            dd<- subset(tmp, segment_id==segment & 
+                lens==len & plt==1 & 
+                yr1 %in% pdat[!is.na(pdat$llen),]$year &
+                yr2 %in% pdat[!is.na(pdat$llen),]$year)
+            segments(dd$yr1,(dd$yr1_est) ,dd$yr2, (dd$yr2_est))
+            if(i %in%c(5,6)){axis(1, at=c(2000:2025),labels=TRUE,tck = 0.02,las=2)}
+            }
+        mtext(side=2,"Predicted fish weight, in Kilograms",line=1,outer=TRUE,cex=1.3)
+        mtext(side=1,"Year",line=3,outer=TRUE,cex=1.3)      
+        mtext(side=1,    
+            paste0("Updated: ", format(Sys.time(), "%m/%d/%Y %X"),sep=""),
+            line=4,cex=0.75,adj=1)
+        mtext(side=3,paste("Segment ",segment,sep=""),outer=TRUE,line=0.5)
+		}
+    if(n==5.4)
+		{## for AM report 20180213 predicted weight by segment
+        ## plot for size class withing basin
+       
+        lw$freq<-1
+        combos<- ddply(lw[lw$segment_id %in% c(2,3,4,7,8,9,10,13,14),],
+            .(segment_id,year_f),summarize,
+            freq=sum(freq),
+            .drop=FALSE)
+        combos<-subset(combos,segment_id %in% c(2,3,4,7,8,9,10,13,14))       
+         
+        fit<- lm(lwgh~llen*year_f*segment_id,lw,
+            subset=segment_id %in% c(2,3,4,7,8,9,10,13,14))
+        tmp<- data.frame()   
+        yrs<-cbind(c(2003:2016),c(2004:2017))
+        lens<-log(c(200,400,600,800,1000,1200))
+        segment_id<-factor(c(2,3,4,7,8,9,10,13,14),
+            levels=levels(lw$segment_id))
+        for(j in segment_id)
+            {
+            for(i in 1:nrow(yrs))
+                {
+                yy<-lsmeans(fit, ~ year_f |llen+segment_id, 
+                    at = list(llen = lens,
+                    segment_id=factor(j,levels(lw$segment_id)),
+                    year_f=factor(as.vector(yrs[i,]),levels(lw$year_f))))
+                yyy<-cld(yy,by="llen",details=TRUE)
+                yyy$lsmeans[is.na(yyy$lsmeans)]<-0
+                y<- exp(aggregate(lsmean~llen,yyy$lsmeans,mean)[,2])/1000
+                y_hat<-as.data.frame(yyy$lsmeans)
+                y_hat<- y_hat[order(y_hat$llen,y_hat$year_f),]             
+                y_hat<-matrix(exp(y_hat$lsmean)/1000,ncol=2,byrow=TRUE)
+                
+                tmp<- plyr::rbind.fill(tmp,data.frame(
+                    yr1=yrs[i,1],
+                    yr2=yrs[i,2],
+                    yr1_est= y_hat[,1],
+                    yr2_est= y_hat[,2],
+                    lens=round(exp(lens),0),
+                    yyy$comparisons,
+                    dif=y,
+                    segment_id=j))      
+                }
+            }
+        tmp$plt<-ifelse(tmp$p.value<=0.05,1,0)  
+
+
+        
+        segs<- c(2,3,4,7,8,9,10,13,14)         
+		par(mfrow=c(3,3),mar=c(0.5,0.5,0,0),oma=c(6,6,3,1)) 
+
+        ## set global ylims
+        len=ll  
+        pdat<- expand.grid(len=len,year_f=levels(lw$year_f),
+            segment_id=factor(segs,levels(lw$segment_id)))
+        pdat$llen<-log(pdat$len)        
+        pdat$lwgh<- predict(fit,pdat)
+        pdat$lwgh_se<-predict(fit,pdat,se.fit=TRUE,interval="confidence")$se.fit
+        pdat$lci<- exp(pdat$lwgh-1.96*pdat$lwgh_se)
+        pdat$uci<- exp(pdat$lwgh+1.96*pdat$lwgh_se)
+        pdat$weight<- exp(pdat$lwgh)
+        pdat[combos$freq<5,-c(1:3)]<-NA
+        pdat$year<-as.numeric(as.character(pdat$year_f))
+        ylims<-(range(na.omit(unlist(pdat[,c(7,8)])))*c(0.9,1.1))/1000
+        
+        for(i in 1:length(segs))
+            {
+            #len=200      
+            #pdat<- expand.grid(len=len,year_f=levels(lw$year_f),
+            #    segment_id=factor(segs[i],levels(lw$segment_id)))
+            #pdat$llen<-log(pdat$len)        
+            #pdat$lwgh<- predict(fit,pdat)
+            #pdat$lwgh_se<-predict(fit,pdat,se.fit=TRUE,interval="confidence")$se.fit
+            #pdat$lci<- exp(pdat$lwgh-1.96*pdat$lwgh_se)
+            #pdat$uci<- exp(pdat$lwgh+1.96*pdat$lwgh_se)
+            #pdat$weight<- exp(pdat$lwgh)
+            #pdat[which(combos[combos$segment_id==segs[i],]$freq<5),-c(1:3)]<-NA
+            #pdat$year<-as.numeric(as.character(pdat$year_f))
+            plot(weight/1000~year,pdat,type='p',
+                ylim=ylims,ylab="",xaxt='n',las=1,cex=1.5,yaxt='n',pch=19,
+                subset=segment_id==segs[i])
+            axis(1, at=c(2000:2025),labels=FALSE,tck = 0.02)
+            axis(3, at=c(2000:2025),labels=FALSE,tck = 0.02)
+            #axis(3, at=axTicks(1),labels=FALSE)
+            if(i%in% c(1,4,7)){axis(2, at=axTicks(2), labels=TRUE,las=1,cex.axis=1.3,tck = 0.02)}
+            if(i%in% c(2,3,5,6,8,9)){axis(2, at=axTicks(2), labels=FALSE,las=1,cex.axis=1.3,tck = 0.02)}
+            axis(4, at=axTicks(2), labels=FALSE,las=1,cex.axis=1.3,tck = 0.02)        
+            segments(x0=pdat[pdat$segment_id==segs[i],]$year,
+                y0=pdat[pdat$segment_id==segs[i],]$lci/1000,lwd=2,
+                x1=pdat[pdat$segment_id==segs[i],]$year,	
+                y1=pdat[pdat$segment_id==segs[i],]$uci/1000)
+            
+            panLab(paste(" Segment ",segs[i],sep=""),mag=1)
+            
+            yrs<-combos[combos$segment_id==segs[i] & combos$freq>=5,]$year
+            dd<- subset(tmp, segment_id==segs[i] & plt==1 & yr1 %in% yrs 
+                & lens==len)
+            
+            segments(dd$yr1,
+                (dd$yr1_est) ,
+                dd$yr2, 
+                (dd$yr2_est))
+            if(i %in%c(7,8,9)){axis(1, at=c(2000:2025),labels=TRUE,tck = 0.02,las=2)}
+            }
+        mtext(side=2,"Predicted fish weight, in Kilograms",line=3,outer=TRUE,cex=1.3)
+        mtext(side=1,"Year",line=3,outer=TRUE,cex=1.3)      
+        mtext(side=1,    
+            paste0("Updated: ", format(Sys.time(), "%m/%d/%Y %X"),sep=""),
+            line=4,cex=0.75,adj=1)
+        mtext(side=3,paste(len," mm",sep=""),outer=TRUE,line=1)    
+            
+		}
+        
+    if(n==5.5)
+        {## for AM report 20180215 condition witin segement
+        segment<- seg   
+        len_brks<-c(0,200,400,600,800,1000,1200)
+        lw$len_bins<- cut(lw$length,len_brks,
+            labels=paste(len_brks[-length(len_brks)],len_brks[-1],sep="-"))
+        ## option 2
+        bns<- c("200-400","400-600","600-800","800-1000","1000-1200")
+        par(mfrow=c(3,2),mar=c(0.25,0.25,0,0),oma=c(5,4,3,1))        
+        for(i in 1:length(bns))
+            {
+            #seg=2  
+            bn<- bns[i]
+            boxplot(kn~year_f,lw,subset=segment_id==segment & len_bins==bn & kn>0.65 & kn<1.65,las=2,
+                xaxt='n',yaxt='n',ylim=c(0.65,1.65))
+            #panLab(paste("Segment",segment, bn,"mm",sep=" "),mag=1)           
+            panLab(paste(" ",bn,"mm",sep=" "),mag=1)           
+            if(!(i %in%c(4,5))){axis(1, at=c(1:length(c(2003:2017))), 
+                labels=FALSE,las=1,cex.axis=1.3,tck = 0.02,las=2)}            
+            if(i %in%c(4,5)){axis(1, at=c(1:length(c(2003:2017))), 
+                labels=c(2003:2017),las=1,cex.axis=1.3,tck = 0.02,las=2)}           
+            if(i %in% c(2,4)){axis(2, at=axTicks(2), 
+                labels=FALSE,las=1,cex.axis=1.3,tck = 0.02)}  
+            if(i %in% c(1,3,5)){axis(2, at=axTicks(2), 
+                labels=TRUE,las=1,cex.axis=1.3,tck = 0.02)}             
+            axis(4, at=axTicks(2), labels=FALSE,las=1,cex.axis=1.3,tck = 0.02) 
+            axis(3, at=c(1:length(c(2003:2017))), 
+               labels=FALSE,las=1,cex.axis=1.3,tck = 0.02,las=2)     
+            axis(1, at=c(1:length(c(2003:2017))), 
+                labels=FALSE,las=1,cex.axis=1.3,tck = 0.02,las=2)              
+            }
+        mtext(side=2,"Condition", outer=TRUE, line=2.5,cex=1.3)
+        mtext(side=1,"Year", outer=TRUE, line=3.5,cex=1.3)
+        #mtext(side=1,paste0("Updated: ", format(Sys.time(), "%m/%d/%Y %X"),sep=""),
+        #    line=4,cex=0.75,adj=1)
+        mtext(side=3,paste("Segment ",segment,sep=""),outer=TRUE,line=0.5)
+        }
+    
+    if(n==5.6)
+        {## for AM report 20180215 condition among segments
+        bn<-ll
+        len_brks<-c(0,200,400,600,800,1000,1200)
+        lw$len_bins<- cut(lw$length,len_brks,
+            labels=paste(len_brks[-length(len_brks)],len_brks[-1],sep="-"))
+        par(mfrow=c(3,3),mar=c(0.25,0.25,0,0),oma=c(5,4,1,1))        
+        for(i in c(2,3,4,7,8,9,10,13,14))
+            {
+            seg=i  
+            boxplot(kn~year_f,lw,subset=segment_id==seg & 
+                len_bins==bn &
+                kn>0.65 & kn<1.65,las=2,
+                xaxt='n',yaxt='n',ylim=c(0.65,1.65))
+            panLab(paste("Segment",i,sep=" "),mag=1)           
+            if(!(i %in%c(10,13,14))){axis(1, at=c(1:length(c(2003:2017))), 
+                labels=FALSE,las=1,cex.axis=1.3,tck = 0.02,las=2)}            
+            if(i %in%c(10,13,14)){axis(1, at=c(1:length(c(2003:2017))), 
+                labels=c(2003:2017),las=1,cex.axis=1.3,tck = 0.02,las=2)} 
+            if(i %in% c(3,4,8,9,13,14)){axis(2, at=axTicks(2), labels=FALSE,las=1,cex.axis=1.3,tck = 0.02)}  
+            if(i %in% c(2,7,10)){axis(2, at=axTicks(2), labels=TRUE,las=1,cex.axis=1.3,tck = 0.02)}  
+            axis(4, at=axTicks(2), labels=FALSE,las=1,cex.axis=1.3,tck = 0.02)            
+            axis(3, at=c(1:length(c(2003:2017))), 
+               labels=FALSE,las=1,cex.axis=1.3,tck = 0.02,las=2)     
+            axis(1, at=c(1:length(c(2003:2017))), 
+                labels=FALSE,las=1,cex.axis=1.3,tck = 0.02,las=2)     
+            }
+        mtext(side=2,"Condition", outer=TRUE, line=2.5,cex=1.3)
+        mtext(side=1,"Year", outer=TRUE, line=3.5,cex=1.3)
+        }
+    
+        
+    
+    if(n==6)
 		{
 		pdat<- tables(4)
 		kns<-tables(1)

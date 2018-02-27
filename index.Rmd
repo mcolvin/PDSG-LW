@@ -21,7 +21,8 @@ source("R/2_functions.R")
 #dat<-readRDS("dat/dat.RDS")
 source("R/3_load.R") ## TAKES A BIT TO LOAD
 source("R/4_clean.R")
-
+lw<- subset(dat$Kn,segment_id%in%c(1:14) & year_f !="2018")
+lw$year_f<-factor(as.character(lw$year_f))
 source("R/5_figures.R")
 source("R/6_tables.R")
 source("R/7_analysis.R")
@@ -35,6 +36,62 @@ savePlot("output/AM-report-pred-weight.wmf",type="wmf")
 savePlot("output/AM-report-weight.wmf.pdf",type="pdf")
 savePlot("output/AM-report-weight.wmf.jpg",type="jpg")
 dev.off()
+
+
+# am report figures
+## figures for AM report for estaimted weight by segment
+### Upper basin
+figures(5.3, seg=2);savePlot("output/AM-report-weight-segment-02.wmf.jpg",type="jpg")
+figures(5.3, seg=3);savePlot("output/AM-report-weight-segment-03.wmf.jpg",type="jpg")
+figures(5.3, seg=4);savePlot("output/AM-report-weight-segment-04.wmf.jpg",type="jpg")
+figures(5.3, seg=7);savePlot("output/AM-report-weight-segment-07.wmf.jpg",type="jpg")
+figures(5.3, seg=8);savePlot("output/AM-report-weight-segment-08.wmf.jpg",type="jpg")
+figures(5.3, seg=9);savePlot("output/AM-report-weight-segment-09.wmf.jpg",type="jpg")
+figures(5.3, seg=10);savePlot("output/AM-report-weight-segment-10.wmf.jpg",type="jpg")
+figures(5.3, seg=13);savePlot("output/AM-report-weight-segment-13.wmf.jpg",type="jpg")
+figures(5.3, seg=14);savePlot("output/AM-report-weight-segment-14.wmf.jpg",type="jpg")
+
+
+
+figures(5.4, ll=200);savePlot("output/AM-report-weight-200-mm.wmf.jpg",type="jpg")
+figures(5.4, ll=400);savePlot("output/AM-report-weight-400-mm.wmf.jpg",type="jpg")
+figures(5.4, ll=600);savePlot("output/AM-report-weight-600-mm.wmf.jpg",type="jpg")
+figures(5.4, ll=800);savePlot("output/AM-report-weight-800-mm.wmf.jpg",type="jpg")
+figures(5.4, ll=1000);savePlot("output/AM-report-weight-1000-mm.wmf.jpg",type="jpg")
+#figures(5.4, ll=1200);savePlot("output/AM-report-weight-1200-mm.wmf.jpg",type="jpg")
+
+
+# am report figures
+## figures for AM report for condition segment
+### Upper basin
+figures(5.5, seg=2);savePlot("output/AM-report-kn-segment-02.wmf.jpg",type="jpg")
+figures(5.5, seg=3);savePlot("output/AM-report-kn-segment-03.wmf.jpg",type="jpg")
+figures(5.5, seg=4);savePlot("output/AM-report-kn-segment-04.wmf.jpg",type="jpg")
+figures(5.5, seg=7);savePlot("output/AM-report-kn-segment-07.wmf.jpg",type="jpg")
+figures(5.5, seg=8);savePlot("output/AM-report-kn-segment-08.wmf.jpg",type="jpg")
+figures(5.5, seg=9);savePlot("output/AM-report-kn-segment-09.wmf.jpg",type="jpg")
+figures(5.5, seg=10);savePlot("output/AM-report-kn-segment-10.wmf.jpg",type="jpg")
+figures(5.5, seg=13);savePlot("output/AM-report-kn-segment-13.wmf.jpg",type="jpg")
+figures(5.5, seg=14);savePlot("output/AM-report-kn-segment-14.wmf.jpg",type="jpg")
+
+figures(5.6, ll="200-400");savePlot("output/AM-report-kn-200-400-mm.wmf.jpg",type="jpg")
+figures(5.6, ll="400-600");savePlot("output/AM-report-kn-400-600-mm.wmf.jpg",type="jpg")
+figures(5.6, ll="600-800");savePlot("output/AM-report-kn-600-800-mm.wmf.jpg",type="jpg")
+figures(5.6, ll="800-1000");savePlot("output/AM-report-kn-800-1000-mm.wmf.jpg",type="jpg")
+
+
+
+#2,3,4,7,8,9,10,13,14
+
+## estmimated weight by size class within segment
+figures(5.3, segment=2)
+
+## condition boxplot 
+
+
+
+
+
 
 
 

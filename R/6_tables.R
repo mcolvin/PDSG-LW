@@ -60,6 +60,30 @@ tables<-function(n)
         pdat<-pdat[,-7]# drop se
 		return(pdat)
 		}
+ 	if(n==4.1)
+		{
+		# MEAN WEIGHT AT LENGTH BY SEGEMENT
+		pdat<-expand.grid(length=c(200,400,600,800,1000,1200,1400,1600),
+			year_f=unique(lw$year_f),
+			segment_id=factor(c(2,3,4,7,8,9,10,13,14),levels=levels(lw$segment_id)))
+        
+		pdat$llen<- log(pdat$length)
+		pdat$llength<- log(pdat$length)
+        fit<- lm(lwgh~llen*year_f*segment_id,lw)
+		pdat$lwgh<- predict(fit,pdat)
+		pdat$lwgh_se<-predict(fit,pdat,se.fit=TRUE,interval="confidence")$se.fit
+		pdat$lci<- exp(pdat$lwgh-1.96*pdat$lwgh_se)
+		pdat$uci<- exp(pdat$lwgh+1.96*pdat$lwgh_se)
+		pdat$weight<- exp(pdat$lwgh)
+		pdat$year<-as.numeric(as.character(pdat$year_f))
+		pdat$kn<- pdat$weight/ Ws(pdat$length)# NEW RANDALL MOD
+		pdat$kn_lci<- pdat$lci/Ws(pdat$length)# NEW RANDALL MOD
+		pdat$kn_uci<- pdat$uci/ Ws(pdat$length)# NEW RANDALL MOD
+		pdat<- pdat[order(pdat$year,pdat$length),]
+        pdat<-pdat[,-7]# drop se
+		return(pdat)
+		}       
+        
     if(n==5)
         {  
         fit<- lm(lwgh~llen*year_f*basin,lw)

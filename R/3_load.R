@@ -2,7 +2,8 @@
 
 randall_removals<- read.csv("dat/randall-deletes.csv")
 com99<- odbcConnectAccess2007("dat/dat.accdb")
-com999<- odbcConnectAccess("dat/20171103-pallid-dbase.mdb")
+com999<- odbcConnectAccess("C:/Users/mcolvin/Documents/projects/Pallid Sturgeon/Analysis/Data/20171103-pallid-dbase.mdb")
+
 eff<- sqlFetch(com999,"EFFORT")
 fish<- sqlFetch(com999,"FISH_CONDITION")
 stocked<- sqlFetch(com99,"stocked")
