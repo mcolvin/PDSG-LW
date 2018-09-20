@@ -18,6 +18,7 @@ $RECYCLE.BIN/
 *.SESSION
 *.potx
 *.accdb
+*.mdb
 *.laccdb
 *.mdb
 *.lmdb
