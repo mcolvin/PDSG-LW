@@ -39,7 +39,7 @@ dev.off()
 
 
 # am report figures
-## figures for AM report for estaimted weight by segment
+## figures for AM report for estimated weight by segment
 ### Upper basin
 figures(5.3, seg=2);savePlot("output/AM-report-weight-segment-02.wmf.jpg",type="jpg")
 figures(5.3, seg=3);savePlot("output/AM-report-weight-segment-03.wmf.jpg",type="jpg")
